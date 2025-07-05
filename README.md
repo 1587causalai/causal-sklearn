@@ -4,11 +4,11 @@
 
 ## 核心概念
 
-**传统机器学习**: 从可观测个体特征到结果的映射
+**传统机器学习**: 从可观测个体特征到结果的映射(from observable individual fetures to outcome)
 - 回归: X → Y (数值结果)  
 - 分类: X → Y (类别结果)
 
-**因果机器学习**: 从不可观测个体因果表示到结果的推理
+**因果机器学习**: 从不可观测个体因果表示到结果的推理(from unobservable individual causal representation to outcome)
 - 因果回归: U → Y (数值结果)
 - 因果分类: U → Y (类别结果)
 
