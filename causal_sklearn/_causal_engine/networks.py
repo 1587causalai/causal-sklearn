@@ -1,11 +1,12 @@
 """
 CausalEngine Core Networks for sklearn-compatible ML tasks
 
-这个模块包含 CausalEngine 的核心网络，专门适配sklearn分类/回归任务：
-1. AbductionNetwork: 从特征推断个体因果表征
-2. ActionNetwork: 从个体表征到决策得分
+这个模块包含 CausalEngine 的核心网络组件，它们是四阶段架构的前三个阶段：
+1. Perception: 感知网络，从原始数据 X 中提取高级特征 Z。
+2. Abduction: 归因网络，从特征 Z 推断个体的内在因果表征 U。
+3. Action: 行动网络，从个体表征 U 生成决策得分 S。
 
-专注于常规ML任务，简化大模型相关复杂性。
+这些网络专注于常规的ML任务（分类/回归）。
 """
 
 import torch
