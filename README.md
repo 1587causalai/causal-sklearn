@@ -1,4 +1,4 @@
-# Causal-Sklearn - 基于CausalEngine™核心的因果回归和因果分类算法的实现
+# Causal-Sklearn - 基于CausalEngine™核心的因果回归和分类
 
 基于突破性CausalEngine™算法的scikit-learn兼容实现 - 将因果推理带入传统机器学习生态系统。
 
