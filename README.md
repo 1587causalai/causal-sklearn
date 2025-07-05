@@ -159,7 +159,7 @@ python scripts/classification_robustness_real_datasets.py
 ## 📚 文档与理论基础
 
 ### 🧮 数学理论基础
-- **[🌟 数学基础 (中文)](docs/MATHEMATICAL_FOUNDATIONS_CN.md)** - **最核心文档** 完整的CausalEngine理论框架
+- **[🌟 数学基础 (中文)](docs/mathematical_foundation.md)** - **最核心文档** 完整的CausalEngine理论框架
 - **[One-Pager Summary](docs/ONE_PAGER.md)** - Executive summary of CausalEngine
 
 ## 📄 许可证

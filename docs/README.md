@@ -11,7 +11,7 @@
 这些文档构成了 `causal-sklearn` 实现的直接理论和数学基础，专注于解决常规的分类与回归任务。
 
 - **[ONE_PAGER.md](ONE_PAGER.md)** - 算法概览与高管摘要
-- **[MATHEMATICAL_FOUNDATIONS_CN.md](MATHEMATICAL_FOUNDATIONS_CN.md)** - 🌟 **最核心** CausalEngine 数学基础 (中文完整版)
+- **[MATHEMATICAL_FOUNDATIONS_CN.md](mathematical_foundation.md)** - 🌟 **最核心** CausalEngine 数学基础 (中文完整版)
 - **[mathematical_equivalence_deep_dive.md](mathematical_equivalence_deep_dive.md)** - 与传统机器学习模型的数学等价性深度分析
 
 ### 🚀 CausalLLM (未来探索方向)
@@ -77,10 +77,9 @@ $$
 1. 从 `ONE_PAGER.md` 开始了解高层概览
 2. 阅读 `MATHEMATICAL_FOUNDATIONS_CN.md` 获得完整理论（**最重要**）
 3. 参考 `core_mathematical_framework.md` 了解详细方程
-4. 使用 `MATHEMATICAL_IMPLEMENTATION_VERIFICATION.md` 进行验证
 
 ### 对于研究者和理论家：
-1. 从 `MATHEMATICAL_FOUNDATIONS_CN.md` 开始（**核心文档**）
+1. 从 `mathematical_foundation.md` 开始（**核心文档**）
 2. 深入研究 `mathematical_equivalence_deep_dive.md`
 3. 学习 `core_mathematical_framework_num_extended.md` 的高级理论
 

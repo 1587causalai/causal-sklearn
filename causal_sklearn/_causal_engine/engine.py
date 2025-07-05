@@ -78,7 +78,7 @@ import torch.optim as optim
 from typing import Tuple, Optional
 
 from .networks import Perception, Abduction, Action
-from .heads import TaskType, create_task_head
+from .heads import TaskType, create_decision_head
 
 
 class CausalEngine(nn.Module):
@@ -174,7 +174,7 @@ class CausalEngine(nn.Module):
         )
         
         # 4. 决断头 (Decision): S → Y
-        self.decision_head = create_task_head(
+        self.decision_head = create_decision_head(
             output_size=self.output_size,
             task_type=self.task_type.value,
             ovr_threshold=ovr_threshold,

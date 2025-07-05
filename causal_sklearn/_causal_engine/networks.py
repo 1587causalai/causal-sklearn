@@ -1,10 +1,16 @@
 """
 CausalEngine Core Networks for sklearn-compatible ML tasks
 
-这个模块包含 CausalEngine 的核心网络组件，它们是四阶段架构的前三个阶段：
+这个模块包含 CausalEngine 的核心网络组件，实现四阶段透明因果推理链的前三个阶段：
+
+`Perception → Abduction → Action → Decision`
+
 1. Perception: 感知网络，从原始数据 X 中提取高级特征 Z。
 2. Abduction: 归因网络，从特征 Z 推断个体的内在因果表征 U。
 3. Action: 行动网络，从个体表征 U 生成决策得分 S。
+
+第四阶段 Decision 在 heads.py 中实现，负责通过结构方程 τ(S) 将决策分数 S 
+转换为任务特定的输出 Y，完成从抽象决策到具体观测的最终转换。
 
 这些网络专注于常规的ML任务（分类/回归）。
 """
@@ -74,18 +80,20 @@ def build_mlp(
 
 class Action(nn.Module):
     """
-    行动网络：从个体表征到决策得分
+    Action网络：CausalEngine第三阶段 - 从个体表征到决策得分
     
-    基于个体表征 U 和五种推理模式，生成决策得分 S
+    基于个体表征 U 和五种推理模式，生成决策得分 S。此阶段回答核心问题："What to do?"
     
     数学框架：
     S = W_A · U' + b_A
-    其中 U' 根据推理模式调制：
-    - deterministic: U' = μ_U
-    - exogenous: U' ~ Cauchy(μ_U, |b_noise|)
-    - endogenous: U' ~ Cauchy(μ_U, γ_U)
-    - standard: U' ~ Cauchy(μ_U, γ_U + |b_noise|)
-    - sampling: U' ~ Cauchy(μ_U + b_noise*ε, γ_U)
+    其中 U' 根据推理模式调制（融合认知与外生不确定性）：
+    - deterministic: U' = μ_U (纯确定性)
+    - exogenous: U' ~ Cauchy(μ_U, |b_noise|) (仅外生不确定性)
+    - endogenous: U' ~ Cauchy(μ_U, γ_U) (仅认知不确定性)
+    - standard: U' ~ Cauchy(μ_U, γ_U + |b_noise|) (两种不确定性叠加)
+    - sampling: U' ~ Cauchy(μ_U + b_noise*ε, γ_U) (外生噪声影响位置)
+    
+    输出的决策得分 S 将传递给第四阶段 Decision，通过结构方程 τ(S) 转换为最终观测 Y。
     
     Args:
         causal_size: 输入的因果表征维度

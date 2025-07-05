@@ -1,8 +1,13 @@
 """
-Task Heads for CausalEngine
+Decision Heads for CausalEngine
 
-任务头 (TaskHead) 负责 CausalEngine 的最后阶段，将内部的决策得分分布
-(decision scores) 转换为特定任务的输出，并计算相应的损失。
+决断头 (DecisionHead) 负责 CausalEngine 第四阶段 Decision，通过结构方程 τ(S) 
+将内部的决策得分分布 S ~ Cauchy(μ_S, γ_S) 转换为特定任务的输出 Y，并计算相应的损失。
+
+数学框架：
+给定观测 y_true，通过以下两条路径计算似然：
+- 路径A (可逆τ): s_inferred = τ^(-1)(y_true) → PDF计算
+- 路径B (不可逆τ): P({s | τ(s) = y_true}) → CDF计算
 
 设计哲学：
 - 高内聚：每个 Head 封装与特定任务相关的所有逻辑（前向计算、损失计算）。
@@ -25,11 +30,14 @@ class TaskType(Enum):
     CLASSIFICATION = "classification"
 
 
-class TaskHead(nn.Module, ABC):
+class DecisionHead(nn.Module, ABC):
     """
-    任务头的抽象基类 (Abstract Base Class)。
+    决断头的抽象基类 (Abstract Base Class)。
+    
+    实现 CausalEngine 第四阶段 Decision，负责通过结构方程 τ(S) 将决策分数 S 
+    转换为观测 Y，并计算观测的似然损失。
 
-    所有具体的任务头都应继承此类，并实现其抽象方法。
+    所有具体的决断头都应继承此类，并实现其抽象方法。
     """
     def __init__(self, output_size: int, factor=10.0):
         super().__init__()
@@ -76,8 +84,10 @@ class TaskHead(nn.Module, ABC):
         raise NotImplementedError
 
 
-class RegressionHead(TaskHead):
-    """回归任务专用头
+class RegressionHead(DecisionHead):
+    """回归任务专用决断头
+    
+    实现结构方程 τ(s) = s (恒等映射)，使用路径A进行似然计算。
     
     TODO: 未来可以考虑加入一些可学习的线性变化，比如加入一个可学习的线性层，将决策得分映射到输出空间。
     """
@@ -90,7 +100,12 @@ class RegressionHead(TaskHead):
         decision_scores: Tuple[torch.Tensor, torch.Tensor],
         mode: str = 'standard'
     ) -> torch.Tensor:
-        """对于回归任务，点预测通常使用位置参数 mu_S。"""
+        """对于回归任务，点预测通常使用位置参数 mu_S。
+        
+        Args:
+            decision_scores: 决策分数元组 (mu_S, gamma_S)
+            mode: 推理模式（回归任务中通常忽略，因为都返回位置参数）
+        """
         mu_S, _ = decision_scores
         return mu_S
 
@@ -118,8 +133,11 @@ class RegressionHead(TaskHead):
             return CauchyMath.nll_loss(y_true, mu_pred, gamma_pred, reduction=reduction) * self.factor
 
 
-class ClassificationHead(TaskHead):
-    """分类任务专用头 (One-vs-Rest)"""
+class ClassificationHead(DecisionHead):
+    """分类任务专用决断头 (One-vs-Rest)
+    
+    实现结构方程 τ_k(s_k) = I(s_k > C_k)，使用路径B进行似然计算。
+    """
 
     def __init__(self, n_classes: int, ovr_threshold: float = 0.0, learnable_threshold: bool = False):
         super().__init__(output_size=n_classes)
@@ -205,23 +223,23 @@ class ClassificationHead(TaskHead):
                 raise ValueError(f"Unknown reduction: {reduction}")
 
 
-def create_task_head(
+def create_decision_head(
     output_size: int,
     task_type: str,
     **kwargs
-) -> TaskHead:
+) -> DecisionHead:
     """
-    任务头工厂函数。
+    决断头工厂函数。
 
-    根据任务类型字符串和参数，创建并返回一个具体的 TaskHead 实例。
+    根据任务类型字符串和参数，创建并返回一个具体的 DecisionHead 实例。
 
     Args:
         output_size (int): 任务的输出维度 (例如，回归特征数或分类类别数)。
         task_type (str): 任务类型，'regression' 或 'classification'。
-        **kwargs: 传递给特定任务头构造函数的额外参数。
+        **kwargs: 传递给特定决断头构造函数的额外参数。
 
     Returns:
-        TaskHead: 一个具体的 TaskHead 子类实例。
+        DecisionHead: 一个具体的 DecisionHead 子类实例。
         
     Raises:
         ValueError: 如果提供了未知的 task_type。
@@ -238,3 +256,5 @@ def create_task_head(
     else:
         # 这段代码理论上不可达，因为 TaskType(task_type) 会在无效时提前失败
         raise ValueError(f"Unknown task type provided: {task_type}")
+
+

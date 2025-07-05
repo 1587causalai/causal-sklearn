@@ -23,11 +23,11 @@ from .networks import (
 )
 
 from .heads import (
-    TaskHead,
+    DecisionHead,
     RegressionHead,
     ClassificationHead,
     TaskType,
-    create_task_head
+    create_decision_head
 )
 
 from .math_utils import (
@@ -46,12 +46,12 @@ __all__ = [
     'Abduction',
     'Action',
     
-    # Task Heads
-    'TaskHead',
+    # Decision Heads
+    'DecisionHead',
     'RegressionHead',
     'ClassificationHead',
     'TaskType',
-    'create_task_head',
+    'create_decision_head',
     
     # Math Utils
     'CauchyMath',
