@@ -12,6 +12,8 @@ This is **causal-sklearn**, a Python library that provides scikit-learn compatib
 - Run quick validation tests: `python scripts/quick_test_causal_engine.py`
 - Run extended tests: `python scripts/quick_test_causal_engine_extended.py`
 - Run single test script: `python scripts/test_causal_split.py`
+- Run benchmark comparison: `python scripts/benchmark_example.py`
+- Debug performance issues: `python scripts/debug_performance_discrepancy.py`
 
 ### Examples and Tutorials
 - Quick start with comprehensive tutorial: `python examples/comprehensive_causal_modes_tutorial_sklearn_style.py`
@@ -21,6 +23,7 @@ This is **causal-sklearn**, a Python library that provides scikit-learn compatib
 ### Robustness Testing
 - Regression robustness testing: `python scripts/regression_robustness_real_datasets.py`
 - Classification robustness testing: `python scripts/classification_robustness_real_datasets.py`
+- PyTorch vs sklearn MLP comparison: `python scripts/pytorch_vs_sklearn_mlp_comparison.py`
 
 ### Code Quality
 - Format code: `black .` (requires `pip install black`)
@@ -32,6 +35,8 @@ This is **causal-sklearn**, a Python library that provides scikit-learn compatib
 - Install in development mode: `pip install -e .`
 - Install with dev dependencies: `pip install -e ".[dev]"`
 - Install with examples dependencies: `pip install -e ".[examples]"`
+- Build package: `python setup.py sdist bdist_wheel`
+- Publish package: `python publish.py` (automated publishing script)
 
 ## Architecture Overview
 
@@ -94,3 +99,26 @@ Causal Representation (U) → Action → Decision Scores (S) → Decision Head �
 - Automatic data standardization and label encoding
 - Comprehensive testing includes synthetic and real-world datasets with various noise levels
 - Focus on causal understanding rather than just pattern matching
+
+## Common Development Workflows
+
+### Testing New Features
+1. Run quick validation: `python scripts/quick_test_causal_engine.py`
+2. Test specific functionality: `python scripts/test_causal_split.py`
+3. Run full benchmark: `python scripts/benchmark_example.py`
+
+### Debugging Performance
+1. Use: `python scripts/debug_performance_discrepancy.py`
+2. Compare baselines: `python scripts/pytorch_vs_sklearn_mlp_comparison.py`
+3. Check robustness: `python scripts/regression_robustness_real_datasets.py`
+
+### Running Examples
+- Start with: `python examples/comprehensive_causal_modes_tutorial_sklearn_style.py`
+- Real-world data: `python examples/real_world_regression_tutorial_sklearn_style.py`
+
+## Results and Outputs
+
+- Test results are saved in `results/` directory
+- Quick test outputs: `results/quick_test_results/`
+- Extended robustness results: `results/extended_robustness/`
+- Real dataset results: `results/regression_real_datasets/`
