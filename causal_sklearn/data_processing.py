@@ -177,6 +177,46 @@ EXTENDED_REGRESSION_DATASETS = {
         'n_samples': 4177,
         'n_features': 8,
         'target_type': 'continuous'
+    },
+    'communities_crime': {
+        'source': 'openml',
+        'name': 'Communities and Crime',
+        'description': 'Predict community crime rates (1994 samples, 127 features)',
+        'openml_id': 183,
+        'target_column': 'ViolentCrimesPerPop',
+        'n_samples': 1994,
+        'n_features': 127,
+        'target_type': 'continuous'
+    },
+    'bike_sharing': {
+        'source': 'openml',
+        'name': 'Bike Sharing',
+        'description': 'Predict hourly bike rental counts (17379 samples, 16 features)',
+        'openml_id': 42712,
+        'target_column': 'cnt',
+        'n_samples': 17379,
+        'n_features': 16,
+        'target_type': 'continuous'
+    },
+    'parkinsons_motor': {
+        'source': 'openml',
+        'name': 'Parkinsons Motor UPDRS',
+        'description': 'Predict motor UPDRS scores for Parkinsons (5875 samples, 20 features)',
+        'openml_id': 189,
+        'target_column': 'motor_UPDRS',
+        'n_samples': 5875,
+        'n_features': 20,
+        'target_type': 'continuous'
+    },
+    'parkinsons_total': {
+        'source': 'openml',
+        'name': 'Parkinsons Total UPDRS',
+        'description': 'Predict total UPDRS scores for Parkinsons (5875 samples, 20 features)',
+        'openml_id': 189,
+        'target_column': 'total_UPDRS',
+        'n_samples': 5875,
+        'n_features': 20,
+        'target_type': 'continuous'
     }
 }
 
