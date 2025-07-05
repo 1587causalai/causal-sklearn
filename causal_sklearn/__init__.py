@@ -5,7 +5,7 @@ Causal-Sklearn: Scikit-learn Compatible Causal Machine Learning
 
 CausalEngine 核心创新：
 - 🧠 因果推理：理解 Y = f(U, ε) 而非学习 P(Y|X)
-- 🎯 三阶段架构：归因推断 → 行动决策 → 任务激活
+- 🎯 四阶段架构：Perception → Abduction → Action → Decision
 - 📐 柯西数学：重尾分布 + 线性稳定性 = 解析计算
 - 🔧 五种模式：deterministic/exogenous/endogenous/standard/sampling
 - ⚡ 无需采样：完全解析化的不确定性传播
@@ -32,7 +32,7 @@ __all__ = [
 # Package metadata
 __author__ = "CausalEngine Team"
 __email__ = ""
-__license__ = "MIT"
+__license__ = "Apache-2.0"
 __description__ = "Scikit-learn compatible implementation of CausalEngine for causal machine learning"
 __theoretical_foundation__ = "Distribution-consistency Structural Causal Models (arXiv:2401.15911)"
-__core_innovation__ = "Three-stage causal reasoning: Abduction → Action → TaskActivation"
+__core_innovation__ = "Four-stage causal reasoning: Perception → Abduction → Action → Decision"

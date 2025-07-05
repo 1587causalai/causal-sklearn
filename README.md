@@ -64,6 +64,43 @@ Causal-Sklearn将强大的因果推理能力引入到熟悉的scikit-learn生态
 
 *这再次证明了 CausalEngine 的 `standard` 模式不仅在回归中表现优异，在分类任务中同样具有处理标签噪声的领先优势。*
 
+## 安装
+
+### 通过 PyPI 安装（推荐）
+
+```bash
+pip install causal-sklearn
+```
+
+### 从源代码安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/1587causalai/causal-sklearn.git
+cd causal-sklearn
+
+# 安装依赖并安装包
+pip install -e .
+```
+
+### 系统要求
+
+- **Python**: >= 3.8
+- **核心依赖**: 
+  - numpy >= 1.21.0
+  - scipy >= 1.7.0  
+  - scikit-learn >= 1.0.0
+  - torch >= 1.10.0
+  - pandas >= 1.3.0
+
+### 验证安装
+
+```python
+import causal_sklearn
+print(f"Causal-sklearn version: {causal_sklearn.__version__}")
+print("安装成功！🎉")
+```
+
 ## 快速开始
 
 ### 基础使用示例

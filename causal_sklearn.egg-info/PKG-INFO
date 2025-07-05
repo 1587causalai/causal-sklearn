@@ -5,10 +5,17 @@ Summary: Scikit-learn compatible implementation of CausalEngine for causal machi
 Home-page: https://github.com/1587causalai/causal-sklearn
 Author: CausalEngine Team
 Author-email: 
+Maintainer: CausalEngine Team
+License: Apache-2.0
+Project-URL: Homepage, https://github.com/1587causalai/causal-sklearn
+Project-URL: Bug Reports, https://github.com/1587causalai/causal-sklearn/issues
+Project-URL: Source, https://github.com/1587causalai/causal-sklearn
+Project-URL: Documentation, https://github.com/1587causalai/causal-sklearn/tree/main/docs
+Keywords: causal-inference,machine-learning,scikit-learn,neural-networks,regression,classification,causality
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Science/Research
-Classifier: License :: OSI Approved :: MIT License
+Classifier: License :: OSI Approved :: Apache Software License
 Classifier: Operating System :: OS Independent
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.8
@@ -25,8 +32,6 @@ Requires-Dist: scipy>=1.7.0
 Requires-Dist: scikit-learn>=1.0.0
 Requires-Dist: torch>=1.10.0
 Requires-Dist: pandas>=1.3.0
-Requires-Dist: matplotlib>=3.5.0
-Requires-Dist: seaborn>=0.11.0
 Provides-Extra: dev
 Requires-Dist: pytest>=6.0; extra == "dev"
 Requires-Dist: pytest-cov>=2.0; extra == "dev"
@@ -36,10 +41,25 @@ Requires-Dist: mypy>=0.800; extra == "dev"
 Provides-Extra: docs
 Requires-Dist: sphinx>=4.0; extra == "docs"
 Requires-Dist: sphinx-rtd-theme>=1.0; extra == "docs"
+Provides-Extra: examples
+Requires-Dist: matplotlib>=3.5.0; extra == "examples"
+Requires-Dist: seaborn>=0.11.0; extra == "examples"
 
-# Causal-Sklearn - 因果机器学习革命
+# Causal-Sklearn - 基于CausalEngine™核心的因果回归和分类
 
 基于突破性CausalEngine™算法的scikit-learn兼容实现 - 将因果推理带入传统机器学习生态系统。
+
+## 核心概念
+
+**传统机器学习**: 从可观测个体特征到结果的映射(from observable individual fetures to outcome)
+- 回归: X → Y (数值结果)  
+- 分类: X → Y (类别结果)
+
+**因果机器学习**: 从不可观测个体因果表示到结果的推理(from unobservable individual causal representation to outcome)
+- 因果回归: U → Y (数值结果)
+- 因果分类: U → Y (类别结果)
+
+数学本质: CausalEngine 学习结构方程 **Y = f(U, ε)** 而非学习条件期望 **E[Y|X]**. 
 
 ## 项目概述
 
@@ -90,6 +110,43 @@ Causal-Sklearn将强大的因果推理能力引入到熟悉的scikit-learn生态
 | **Causal (standard)**      | **0.9225**   | **0.9224**    | **0.9225** | **0.9224**   |
 
 *这再次证明了 CausalEngine 的 `standard` 模式不仅在回归中表现优异，在分类任务中同样具有处理标签噪声的领先优势。*
+
+## 安装
+
+### 通过 PyPI 安装（推荐）
+
+```bash
+pip install causal-sklearn
+```
+
+### 从源代码安装
+
+```bash
+# 克隆仓库
+git clone https://github.com/1587causalai/causal-sklearn.git
+cd causal-sklearn
+
+# 安装依赖并安装包
+pip install -e .
+```
+
+### 系统要求
+
+- **Python**: >= 3.8
+- **核心依赖**: 
+  - numpy >= 1.21.0
+  - scipy >= 1.7.0  
+  - scikit-learn >= 1.0.0
+  - torch >= 1.10.0
+  - pandas >= 1.3.0
+
+### 验证安装
+
+```python
+import causal_sklearn
+print(f"Causal-sklearn version: {causal_sklearn.__version__}")
+print("安装成功！🎉")
+```
 
 ## 快速开始
 
@@ -186,7 +243,7 @@ python scripts/classification_robustness_real_datasets.py
 ## 📚 文档与理论基础
 
 ### 🧮 数学理论基础
-- **[🌟 数学基础 (中文)](docs/MATHEMATICAL_FOUNDATIONS_CN.md)** - **最核心文档** 完整的CausalEngine理论框架
+- **[🌟 数学基础 (中文)](docs/mathematical_foundation.md)** - **最核心文档** 完整的CausalEngine理论框架
 - **[One-Pager Summary](docs/ONE_PAGER.md)** - Executive summary of CausalEngine
 
 ## 📄 许可证
