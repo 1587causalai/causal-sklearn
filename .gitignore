@@ -87,3 +87,29 @@ dmypy.json
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# LaTeX generated files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.fls
+*.nav
+*.snm
+*.vrb
+*-backup.tex
+
+# AuthorKit26 - only track our submission directory
+paper/AuthorKit26/*
+!paper/AuthorKit26/AnonymousSubmission/
+!paper/AuthorKit26/AnonymousSubmission/LaTeX/
+!paper/AuthorKit26/AnonymousSubmission/LaTeX/*.tex
+!paper/AuthorKit26/AnonymousSubmission/LaTeX/*.bib
+!paper/AuthorKit26/AnonymousSubmission/LaTeX/*.sty
+!paper/AuthorKit26/AnonymousSubmission/LaTeX/*.bst
