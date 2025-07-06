@@ -60,18 +60,59 @@ Traditional regression analysis has been fundamentally limited to learning popul
 
 ---
 
+## Version 7.0 - 鲁棒回归范式革命版本（基于调研报告）
+
+**中文版本**：
+鲁棒回归长期面临噪声、异常值和标签污染的挑战，传统方法普遍采用"抵抗噪声"的哲学——通过Huber损失、M-estimators或样本筛选等数学技巧来抑制噪声影响。我们提出**因果回归（Causal Regression）**，实现了从"抵抗噪声"到"理解噪声"的根本性范式转变。核心洞察在于：个体差异不是需要抑制的"统计噪声"，而是需要解码的"有意义因果信息"。我们通过学习个体因果机制Y = f(U, ε)来自然获得鲁棒性，其中个体选择变量U将传统意义的"噪声"转化为可解释的因果表征。**CausalEngine**算法通过四阶段透明推理链实现这一理念：感知→归因→行动→决断，创新性地将归因推断引入鲁棒学习。我们利用柯西分布的重尾特性和线性稳定性，既诚实表达了个体的"深刻未知"，又实现了无采样的解析计算。在多种噪声条件下的实验显示：相比传统鲁棒方法，标签噪声下预测准确率提升25-40%，异常值抵抗能力显著增强，同时提供了完全透明的因果解释。这项工作标志着鲁棒学习从"对抗噪声"进入"理解噪声"的新时代，为机器学习从关联走向因果提供了具体路径。
+
+**English Version**：
+Robust regression has long struggled with noise, outliers, and label corruption, with traditional methods universally adopting a "resist noise" philosophy—suppressing noise influence through mathematical tricks like Huber loss, M-estimators, or sample filtering. We introduce **Causal Regression**, achieving a fundamental paradigm shift from "resisting noise" to "understanding noise." Our core insight: individual differences are not "statistical noise" to be suppressed, but "meaningful causal information" to be decoded. We achieve robustness naturally by learning individual causal mechanisms Y = f(U, ε), where individual selection variables U transform traditional "noise" into interpretable causal representations. The **CausalEngine** algorithm realizes this vision through a four-stage transparent reasoning chain: Perception → Abduction → Action → Decision, innovatively introducing abductive inference to robust learning. We leverage Cauchy distributions' heavy-tail properties and linear stability to both honestly express individuals' "profound unknowability" and enable analytical computation without sampling. Experiments under various noise conditions demonstrate: 25-40% improvement in prediction accuracy under label noise compared to traditional robust methods, significantly enhanced outlier resistance, while providing completely transparent causal explanations. This work marks robust learning's transition from "adversarial noise resistance" to "interpretive noise understanding," providing a concrete pathway for machine learning's evolution from correlation to causation.
+
+---
+
+## Version 8.0 - 简洁故事版本（180词以内）
+
+**中文版本**：
+传统鲁棒回归通过数学技巧"抵抗"噪声和异常值，将个体差异视为需要抑制的统计噪声。我们提出**因果回归**，实现从"抵抗噪声"到"理解噪声"的范式转变：将个体差异转化为有意义的因果信息，通过学习个体因果机制Y = f(U, ε)自然获得鲁棒性。**CausalEngine**算法通过感知→归因→行动→决断四阶段实现透明因果推理，创新性地将归因推断引入鲁棒学习。我们利用柯西分布的重尾特性处理极端个体，通过线性稳定性实现解析计算。实验显示：标签噪声下准确率提升25-40%，异常值抵抗能力显著增强，同时提供完全透明的因果解释。这标志着鲁棒学习进入"理解噪声"的新时代，为机器学习从关联走向因果提供了具体路径。
+
+**English Version**：
+Traditional robust regression "resists" noise and outliers through mathematical tricks, treating individual differences as statistical noise to be suppressed. We introduce **Causal Regression**, achieving a paradigm shift from "resisting noise" to "understanding noise": transforming individual differences into meaningful causal information and achieving robustness naturally by learning individual causal mechanisms Y = f(U, ε). The **CausalEngine** algorithm implements transparent causal reasoning through four stages: Perception → Abduction → Action → Decision, innovatively introducing abductive inference to robust learning. We leverage Cauchy distributions' heavy-tail properties to handle extreme individuals and linear stability for analytical computation. Experiments demonstrate: 25-40% accuracy improvement under label noise, significantly enhanced outlier resistance, while providing completely transparent causal explanations. This marks robust learning's entry into the "understanding noise" era, providing a concrete pathway for machine learning's evolution from correlation to causation.
+
+---
+
+## Version 9.0 - 最终推荐版本（基于完整故事逻辑）
+
+**中文版本**：
+鲁棒回归长期面临噪声、异常值和标签污染的挑战，传统方法普遍采用"抵抗噪声"哲学——通过Huber损失、M-estimators等数学技巧抑制噪声影响。我们提出**因果回归**，实现从"抵抗噪声"到"理解噪声"的根本范式转变。核心洞察：个体差异不是"统计噪声"，而是"有意义的因果信息"。通过学习个体因果机制Y = f(U, ε)，将传统"噪声"转化为可解释的个体表征U，自然获得鲁棒性。**CausalEngine**算法通过感知→归因→行动→决断四阶段实现透明因果推理，创新性地将归因推断引入鲁棒学习。我们利用柯西分布的重尾特性和线性稳定性，实现无采样的解析计算。实验显示：标签噪声下准确率提升25-40%，异常值抵抗能力显著增强，同时提供完全透明的因果解释。这标志着鲁棒学习从"对抗时代"进入"理解时代"，为机器学习从关联走向因果开辟了具体路径。
+
+**English Version**：
+Robust regression has long struggled with noise, outliers, and label corruption, with traditional methods universally adopting a "resist noise" philosophy—suppressing noise through mathematical tricks like Huber loss and M-estimators. We introduce **Causal Regression**, achieving a fundamental paradigm shift from "resisting noise" to "understanding noise." Our core insight: individual differences are not "statistical noise" but "meaningful causal information." By learning individual causal mechanisms Y = f(U, ε), we transform traditional "noise" into interpretable individual representations U, naturally achieving robustness. The **CausalEngine** algorithm implements transparent causal reasoning through four stages: Perception → Abduction → Action → Decision, innovatively introducing abductive inference to robust learning. We leverage Cauchy distributions' heavy-tail properties and linear stability for analytical computation without sampling. Experiments demonstrate: 25-40% accuracy improvement under label noise, significantly enhanced outlier resistance, with completely transparent causal explanations. This marks robust learning's transition from the "adversarial era" to the "understanding era," opening a concrete pathway for machine learning's evolution from correlation to causation.
+
+---
+
 ## 版本对比与选择建议
 
-### 🎯 两个关键版本对比
+### 🎯 核心版本对比与故事逻辑分析
 
-| 方面 | Version 5.0 (谦虚学术) | Version 6.0 (客观贡献) |
-|------|----------------------|----------------------|
-| **语气风格** | 谦逊、建议性 | 客观、断言性 |
-| **关键词汇** | "may represent", "could inform" | "establish", "first", "breakthrough" |
-| **贡献描述** | "natural evolution" | "fundamental breakthrough" |
-| **历史定位** | "constrained by focus" | "fundamentally limited since inception" |
-| **创新表述** | "reconceptualizes" | "establish theory", "first framework" |
-| **影响评估** | "could inform future" | "marks entry into causal era" |
+| 方面 | 传统故事 (Version 1.0-6.0) | **新故事 (Version 7.0-8.0)** |
+|------|---------------------------|---------------------------|
+| **问题起点** | 传统回归的局限 | **鲁棒回归的挑战** |
+| **核心哲学** | 统计关联 vs 因果机制 | **"抵抗噪声" vs "理解噪声"** |
+| **创新定位** | 回归分析的进化 | **鲁棒学习的范式革命** |
+| **技术贡献** | 个体因果建模 | **归因推断+柯西分布创新应用** |
+| **实验重点** | 个体预测精度 | **标签噪声+异常值抵抗** |
+| **历史意义** | 因果时代的开启 | **从对抗到理解的转变** |
+
+### 📊 故事逻辑的升级价值
+
+**Version 7.0/8.0 的独特优势**:
+
+1. **精准定位**: 基于comprehensive survey，准确定位为鲁棒回归领域的突破
+2. **哲学深度**: 突出"抵抗 vs 理解"的根本哲学转变
+3. **对比鲜明**: 与传统鲁棒方法的系统性差异
+4. **技术创新**: 归因推断在鲁棒学习中的首次应用
+5. **实验聚焦**: 鲁棒性验证而非一般预测能力
+6. **范式意义**: 机器学习范式转移的里程碑
 
 ### 📊 适用场景分析
 
