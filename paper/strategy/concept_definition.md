@@ -13,8 +13,8 @@
 - **共同特征**: 将个体差异视为"统计噪声"，通过数学操作进行抑制
 
 **Causal Regression哲学**：
-- **核心思想**: 噪声是信息，需要通过因果理解**解码**
-- **革命性洞察**: 将个体差异从"统计噪声"转化为"有意义的因果信息"
+- **核心思想**: 噪声是混合物，需要通过因果理解**分解**
+- **革命性洞察**: 将传统"垃圾袋式"噪声项进行有原则的分解，区分结构化个体信息U与不可约随机性ε
 - **实现机制**: 通过学习因果机制 Y = f(U, ε) 来自然获得鲁棒性
 
 ### 0.2 独特性验证结果
@@ -29,20 +29,36 @@
 ### 1.1 Causal Regression的正式定义
 
 **Definition 1 (Causal Regression - Robust Learning Paradigm)**: 
-Causal Regression is a robust learning paradigm that achieves noise resistance through causal understanding rather than mathematical tricks. It aims to discover the underlying causal mechanism $f$ in the structural equation:
+Causal Regression is a robust learning paradigm that achieves noise resistance through principled decomposition rather than mathematical tricks. It aims to discover the underlying causal mechanism $f$ in the structural equation:
 $$Y = f(U, \varepsilon)$$
 where:
-- $U$ is an **individual causal representation** inferred from observed evidence $X$, transforming individual differences from "statistical noise" to "meaningful causal information"
-- $\varepsilon$ is **exogenous noise** representing environmental randomness independent of individual characteristics
+- $U$ is an **individual causal representation** inferred from observed evidence $X$, extracted from traditional regression's "garbage bag" noise term
+- $\varepsilon$ is **irreducible exogenous randomness** representing environmental randomness that must be honestly acknowledged
 - $f$ is a **universal causal law** that applies consistently across all individuals, embodying the "simplicity in law" principle
 
 **Key Distinction from Traditional Robust Methods**: 
 - **Traditional Approach**: Resist noise through loss function modifications (Huber, Cauchy) or sample filtering
-- **Causal Regression**: Understand noise by learning individual causal mechanisms, achieving robustness through comprehension rather than suppression
+- **Causal Regression**: Decompose noise through principled separation of structured individual information from irreducible randomness
 
 **Fundamental Question Transformation**:
 - **Traditional**: "How to resist outliers and noise?"
-- **Causal Regression**: "Why do individuals differ, and how can we model these differences causally?"
+- **Causal Regression**: "How to separate meaningful individual information from true randomness?"
+
+### 1.2 双源随机性分解理论 (Dual Sources of Randomness Decomposition)
+
+**核心创新**: 将传统回归中的"垃圾袋式"噪声项进行有原则的分解：
+
+| 随机性来源 | 内生不确定性 (Endogenous Uncertainty) | 外生随机性 (Exogenous Randomness) |
+|------------|---------------------------------------|----------------------------------|
+| **哲学根源** | **认知论 (Epistemology)**: "我们是谁？" | **本体论 (Ontology)**: "世界发生了什么？" |
+| **数学符号** | $\gamma_U$ | $b_{noise}$ |
+| **物理含义** | 对个体认知的局限性 | 世界内在的随机波动 |
+| **处理逻辑** | 通过归因推断可以逐步改善 | 必须诚实承认和保留 |
+
+**CausalEngine作为精密离心机**:
+- **不是炼金术**: 不将所有噪声转化为信号
+- **是分解器**: 有原则地分离有意义的因果信息
+- **诚实原则**: 承认并保留不可约的随机性
 
 ### 1.2 哲学基础：从"抵抗"到"理解"的根本转变
 

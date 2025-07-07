@@ -72,6 +72,9 @@ mypy .
 
 # Testing
 pytest tests/
+
+# Run specific test
+pytest tests/test_specific_functionality.py
 ```
 
 ## Architecture Overview

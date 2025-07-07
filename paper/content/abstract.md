@@ -90,6 +90,16 @@ Robust regression has long struggled with noise, outliers, and label corruption,
 
 ---
 
+## Version 10.0 - 基于双源随机性分解的精确表述
+
+**中文版本**：
+鲁棒回归长期面临噪声、异常值和标签污染的挑战，传统方法普遍采用"抵抗噪声"哲学——通过数学技巧抑制噪声影响。我们提出**因果回归**，实现从"抵抗噪声"到"理解噪声"的根本范式转变。核心创新：将传统回归中的"垃圾袋式"噪声项进行有原则的分解，区分结构化个体信息U与不可约随机性ε。**CausalEngine**算法通过感知→归因→行动→决断四阶段实现透明因果推理，创新性地将归因推断引入鲁棒学习。我们建立了双源随机性分解理论：内生不确定性γ_U（认知论："我们是谁？"）与外生随机性b_noise（本体论："世界发生了什么？"），利用柯西分布的数学优雅性实现无采样解析计算。CausalEngine更像精密离心机而非炼金术——有原则地分离有意义的因果信息，同时诚实承认不可约的随机性。实验显示：标签噪声下准确率提升25-40%，异常值抵抗能力显著增强，同时提供完全透明的因果解释。这标志着鲁棒学习从"对抗时代"进入"理解时代"，为机器学习从关联走向因果开辟了具体路径。
+
+**English Version**：
+Robust regression has long struggled with noise, outliers, and label corruption, with traditional methods universally adopting a "resist noise" philosophy—suppressing noise influence through mathematical tricks. We introduce **Causal Regression**, achieving a fundamental paradigm shift from "resisting noise" to "understanding noise." Our core innovation: principled decomposition of traditional regression's "garbage bag" noise term, distinguishing structured individual information U from irreducible randomness ε. The **CausalEngine** algorithm implements transparent causal reasoning through four stages: Perception → Abduction → Action → Decision, innovatively introducing abductive inference to robust learning. We establish a dual sources of randomness decomposition theory: endogenous uncertainty γ_U (epistemology: "Who are we?") versus exogenous randomness b_noise (ontology: "What happens to us?"), leveraging Cauchy distributions' mathematical elegance for analytical computation without sampling. CausalEngine acts like a precision centrifuge rather than alchemy—principled separation of meaningful causal information while honestly acknowledging irreducible randomness. Experiments demonstrate: 25-40% accuracy improvement under label noise, significantly enhanced outlier resistance, with completely transparent causal explanations. This marks robust learning's transition from the "adversarial era" to the "understanding era," opening a concrete pathway for machine learning's evolution from correlation to causation.
+
+---
+
 ## 版本对比与选择建议
 
 ### 🎯 核心版本对比与故事逻辑分析
