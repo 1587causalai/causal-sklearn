@@ -2,7 +2,9 @@
 
 基于突破性CausalEngine™算法的scikit-learn兼容实现 - 将因果推理带入传统机器学习生态系统。
 
-Causal Regression 是基于因果关系的回归预测算法，是没有treatment的因果推断。
+- Causal Regression 是基于因果关系的回归预测，是没有treatment的因果推断。
+- 回归将从误差最小化， 而因果回归是极大思然
+
 
 ## 核心概念
 

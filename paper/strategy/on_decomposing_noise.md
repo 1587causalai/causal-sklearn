@@ -59,34 +59,42 @@
 | **数学符号** | `γ_U` (Gamma_U) | `b_noise` (bias_noise) |
 | **符号含义** | `Abduction`网络推断出的柯西分布的**尺度参数**。它量化了“嫌疑人名单”的宽度。`γ_U` 越大，我们对个体的认知越模糊。 | 一个可配置的、代表外部世界随机性**强度**的标量。 |
 | **作用逻辑** | 由 `scale_net(X)` **推断**得出，是模型学习的一部分，定义了 `U` 的先验。 | 通过**数学等价假设**，将 `ε` 的影响转化为对 `U` 分布的**修正**，构造出“被噪声扰动的虚拟个体群体”。 |
-| **最终公式** | \multicolumn{2}{c}{`standard` 模式下决策得分S的尺度：`γ_S = |W_A| * (γ_U + |b_noise|)`} |
+| **最终公式** | colspan=2 | `standard` 模式下决策得分S的尺度：`γ_S = |W_A| * (γ_U + |b_noise|)` |
 
 这个双源分解的设计，是我整个理论的基石。它清晰地区分了“不知道你是谁”和“不知道你会遇到什么事”，保证了因果规律 `f_action` 本身的纯粹性，并最终实现了模型的高度可解释性与可控性。
 
 ```mermaid
 graph TD
     subgraph "归因 (Abduction)"
-        X["证据 X"] --> Nets["loc_net & scale_net"]
-        Nets --> |推断出| U_dist["'嫌疑人名单'<br>U ~ Cauchy(μ_U, γ_U)"]
+        X["📊 证据 X"] --> Nets["🧠 loc_net & scale_net"]
+        Nets -->|"推断出"| U_dist["👥 嫌疑人名单<br/>U ~ Cauchy(μ_U, γ_U)"]
     end
 
     subgraph "行动前修正 (Pre-Action)"
-        U_dist --> |被 b_noise 修正| U_noisy_dist["'被噪声扰动的虚拟群体'"]
-        style U_noisy_dist fill:#fff3e0,stroke:#f57c00
+        U_dist -->|"被 b_noise 修正"| U_noisy_dist["🌊 被噪声扰动的虚拟群体"]
+        style U_noisy_dist fill:#fff3e0,stroke:#f57c00,stroke-width:2px
     end
 
     subgraph "行动 (Action)"
-        U_noisy_dist --> |应用确定性规律 f_action| S_dist["决策得分分布 S"]
+        U_noisy_dist -->|"应用确定性规律 f_action"| S_dist["📈 决策得分分布 S"]
     end
 
     subgraph "不确定性的两个源头"
-        Source1["[源头1: 内生不确定性]<br>对个体认知不清"] --"量化为"--> gamma_U[("γ_U")]
-        Source2["[源头2: 外生随机性]<br>世界内在的随机波动"] --"量化为"--> b_noise[("b_noise")]
+        Source1["💭 源头1: 内生不确定性<br/>对个体认知不清"] -->|"量化为"| gamma_U(["γ_U"])
+        Source2["🎲 源头2: 外生随机性<br/>世界内在的随机波动"] -->|"量化为"| b_noise(["b_noise"])
     end
 
-    gamma_U --> U_dist
-    b_noise --> U_noisy_dist
-    style U_dist fill:#f3e5f5,stroke:#7b1fa2
+    gamma_U -.->|"影响分布宽度"| U_dist
+    b_noise -.->|"修正分布参数"| U_noisy_dist
+    
+    style X fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    style Nets fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style U_dist fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style S_dist fill:#e8f5e9,stroke:#388e3c,stroke-width:2px
+    style Source1 fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style Source2 fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    style gamma_U fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style b_noise fill:#fff9c4,stroke:#f57f17,stroke-width:2px
 ```
 
 ## 4. 最终战略
@@ -117,7 +125,7 @@ graph TD
 | :-- | :--- | :--- |
 | **I** | **矛盾的术语** | 引入“因果回归”以及“干预 vs 特征”的核心冲突。 |
 | **II**| **有缺陷的前提** | 揭示冲突的根源：传统回归将误差视为无意义的“噪声”，一个需要被压制的麻烦。 |
-| **III**| **范式转移**| 提出我们的核心论点：回归的目标不应是学习 `E[Y\|X]`，而是建模个体因果机制 `Y = f(U, ε)`。 |
+| **III**| **范式转移**| 提出我们的核心论点：回归的目标不应是学习 `E[Y|X]`，而是建模个体因果机制 `Y = f(U, ε)`。 |
 | **IV**| **有原则的分解** | 阐明我们的关键创新：我们不“消灭”噪声，我们**分解**它。我们将结构化的因果信息 (`U`) 从不可约的随机性 (`ε`) 中分离出来。 |
 | **V** | **实证检验** | 展示实验结果，证明通过建模 `U`，我们获得了卓越的鲁棒性和可解释性，从而证实了新范式的巨大实用价值。 |
 | **VI**| **新的视野** | 总结：通过分解噪声，我们建立了第一个将回归的预测能力与因果的解释能力统一起来的原则性框架。 |
