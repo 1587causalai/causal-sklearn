@@ -1,3 +1,52 @@
+# 关键信息
+
+
+
+  1. 开篇悬念（必须保留）
+
+  - 房价数据集没有treatment的悖论
+  - 回归分析 vs 因果推断的术语冲突
+  - "因果回归"这个名字本身就是矛盾
+
+  2. 四重认知重塑（隐性主线）
+
+  - 学习"物理法则"而非"统计现象"
+  - 解放"因果"——从"干预"到"观测"
+  - 重构"回归"——从"最小化误差"到"理解随机性来源"
+  - 定义"可解释性"——从"外部观察"到"内在同构"
+
+  3. 最大的范式转变
+
+  - 从误差最小化到最大似然
+  - 从优化问题到推断问题
+  - 从点估计到分布估计
+  - 从"拟合"到"理解"
+
+  4. U的革命性意义
+
+  - 理论必然性：建模反事实的数学要求
+  - 双重身份：选择变量 + 因果表征
+  - 解放因果：不需要explicit treatment
+
+  5. 双源不确定性分解
+
+  - Y的随机性来自两个源头
+  - 内生不确定性γ_U（认知局限）
+  - 外生随机性b_noise（世界本质）
+
+  6. 技术优雅性
+
+  - 柯西分布的线性稳定性
+  - 解析计算，无需采样
+  - 四阶段架构的内在可解释性
+
+  7. 实际影响
+
+  - 卓越的噪声鲁棒性
+  - 诚实的不确定性量化
+  - 真正的可解释性
+
+
 # Introduction
 
 When one mentions regression analysis, the California housing dataset often comes to mind: a collection of features about districts, and a house price to predict. When one mentions causality, it almost invariably involves a "treatment" from a clinical trial or a marketing campaign. Its core lies in an intervention, a concept seemingly absent in the housing dataset. This paper introduces **Causal Regression**, a novel regression algorithm rooted in causality. An immediate and unavoidable question arises: for a dataset like California housing that lacks any explicit "treatment", what does our "Causal Regression" actually mean?
