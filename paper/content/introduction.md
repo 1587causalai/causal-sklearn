@@ -57,7 +57,7 @@ By committing to this deeper, causal pursuit, our algorithm gains two decisive a
 
 This powerful causal framework is not a one-trick pony. We demonstrate its versatility by successfully extending it to classification tasks, delivering similar gains in both performance and clarity. This paper makes the following principal contributions:
 
-1.  **A New Paradigm for Regression.** We redefine the objective of regression analysis. Instead of learning conditional expectations (`E[Y|X]`), we introduce a framework to learn the underlying individual causal mechanisms (`Y = f(U, ε)`), treating the residual not as noise to be minimized, but as a source of information to be decomposed.
+1.  **A New Paradigm for Regression.** We redefine the objective of regression analysis. Instead of learning conditional expectations (`E[Y|X]`), we introduce a framework to learn the underlying individual causal mechanisms (`Y = f(U, ε)`), where individual differences are treated as meaningful causal information rather than statistical noise.
 
 2.  **Causal Discovery from Observational Data.** We introduce a novel methodology to discover and model latent causal factors (`U`) from standard, non-interventional datasets where no explicit "treatment" variable exists. This dramatically expands the scope and applicability of causal thinking to a vast range of conventional machine learning problems.
 
@@ -79,7 +79,7 @@ The remainder of this paper details the theory, implementation, and empirical va
 
 这个强大的因果框架并非只能用于一隅。我们通过将其成功地扩展到分类任务，证明了它的通用性，在性能和清晰度上都带来了相似的增益。本文的主要贡献如下：
 
-1.  **一个回归分析的新范式。** 我们重新定义了回归分析的目标。我们的框架不再是学习条件期望（`E[Y|X]`），而是学习底层的个体因果机制（`Y = f(U, ε)`），并首次将残差项不作为需要被最小化的噪声，而是作为需要被分解的信息源。
+1.  **一个回归分析的新范式。** 我们重新定义了回归分析的目标。我们的框架不再是学习条件期望（`E[Y|X]`），而是学习底层的个体因果机制（`Y = f(U, ε)`），其中个体差异被视为有意义的因果信息而非统计噪声。
 
 2.  **从观测数据中发现因果。** 我们引入了一种全新的方法论，用于从没有明确"处理"变量的标准、非干预性数据集中，发现并建模潜在的因果因素（`U`）。这极大地扩展了因果思维在广大传统机器学习问题上的应用范围。
 

@@ -12,12 +12,7 @@ Our framework answers this question through a radical reformulation. Instead of 
 
 This seemingly simple change conceals profound implications. The function f represents a universal causal law—the same mechanism that operates across all individuals. The variable U serves a revolutionary dual purpose: as an **individual selection variable** that identifies which specific entity we're examining (this particular house, this specific patient), and as a **causal representation** encoding all intrinsic properties that drive outcomes. Observable features X become mere evidence for inferring U, not direct causes of Y.
 
-Most critically, this reformulation transforms the optimization objective itself. Where traditional regression minimizes prediction error—treating uncertainty as an enemy—Causal Regression maximizes likelihood:
-
-**Traditional**: `min E[(Y - f(X))²]`  
-**Causal**: `max P(Y|X) = ∫ P(Y|U,ε)P(U|X)dU`
-
-This is not merely a technical adjustment but a philosophical revolution. By maximizing likelihood, we acknowledge that variability in outcomes is not noise to be suppressed but information to be understood. This naturally leads to a principled decomposition of uncertainty into two sources:
+Most critically, this reformulation transforms how we view prediction uncertainty. Traditional regression treats all deviations from E[Y|X] as unwanted noise. Causal Regression recognizes that these deviations contain meaningful information about individual causal characteristics and true environmental randomness. This naturally leads to a principled decomposition of uncertainty into two sources:
 
 - **Endogenous uncertainty (γ_U)**: Our epistemic limitations in knowing an individual's true causal factors
 - **Exogenous randomness (b_noise)**: The irreducible stochasticity of the world itself

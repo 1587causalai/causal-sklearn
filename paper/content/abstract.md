@@ -40,25 +40,7 @@ The fundamental limitation of traditional regression—learning population avera
 
 ---
 
-## Version 5.0 - 理论革命版本（谦虚学术风格）
 
-**中文版本**：
-一个多世纪以来，回归分析一直受到其专注于学习群体层面关联E[Y|X]这一根本性制约，这种方法本质上将个体差异视为统计噪声而非有意义的因果变异。我们提出**因果回归**，一个通过显式建模个体因果机制Y = f(U, ε)来重新概念化回归学习的理论框架。这种方法引入了个体因果表征U的概念——捕捉每个实体为何表现独特——同时发现支配所有个体结果产生的普适因果律f。我们的框架解决了回归分析以前无法触及的根本问题：不仅仅是平均发生什么，而是为什么特定个体会出现特定结果。我们提出了**CausalEngine**，通过四个数学原则性阶段操作化这一框架：感知（证据提取）、归因（个体因果推断）、行动（普适律应用）和决断（任务特定实现）。该算法利用柯西分布的解析性质实现无采样计算，同时提供将不确定性分解为认知性和外生性成分的原则性方法。实证评估展示了个体预测精度的显著提升（15-30%）、鲁棒的反事实推理能力和可解释的因果解释。这项工作表明，因果回归可能代表了回归分析的自然演进，提供了连接统计学习与因果理解的数学基础桥梁，可能为个性化和可解释机器学习的未来发展提供启发。
-
-**English Version**：
-For over a century, regression analysis has been fundamentally constrained by its focus on learning population-level associations E[Y|X], an approach that inherently treats individual differences as statistical noise rather than meaningful causal variation. We propose **Causal Regression**, a theoretical framework that reconceptualizes regression learning by explicitly modeling individual causal mechanisms Y = f(U, ε). This approach introduces the concept of individual causal representations U—capturing why each entity behaves uniquely—while discovering universal causal laws f that govern outcome generation across all individuals. Our framework addresses a fundamental question previously inaccessible to regression analysis: not merely what happens on average, but why specific outcomes emerge for specific individuals. We present **CausalEngine**, which operationalizes this framework through four mathematically principled stages: Perception (evidence extraction), Abduction (individual causal inference), Action (universal law application), and Decision (task-specific realization). The algorithm leverages the analytical properties of Cauchy distributions to achieve computation without sampling while providing a principled decomposition of uncertainty into epistemic and aleatoric components. Empirical evaluation demonstrates substantial improvements in individual prediction accuracy (15-30%), robust counterfactual reasoning capabilities, and interpretable causal explanations. This work suggests that Causal Regression may represent a natural evolution of regression analysis, offering a mathematically grounded bridge between statistical learning and causal understanding that could inform future developments in personalized and interpretable machine learning.
-
----
-
-## Version 6.0 - 客观贡献描述版本
-
-**中文版本**：
-传统回归分析自诞生以来一直局限于学习群体统计关联E[Y|X]，无法理解个体差异的因果根源。我们创立了**因果回归（Causal Regression）**理论，首次将回归学习重构为个体因果机制发现Y = f(U, ε)，实现了从统计关联到因果理解的根本突破。我们的理论框架引入了个体选择变量U的双重身份概念——既是个体选择变量又是因果表征载体——这一创新解决了因果推理中个体化建模的核心难题。**CausalEngine**算法实现了这一理论突破，建立了首个端到端的个体因果推理系统，通过感知→归因→行动→决断四阶段透明推理链，将抽象的因果理论转化为可操作的算法框架。我们创新性地利用柯西分布的线性稳定性实现全流程解析计算，彻底摆脱了传统因果推理对采样的依赖，同时建立了认知与外生不确定性的数学分解理论。实验结果显示：个体预测精度相比传统方法提升15-30%，在反事实推理准确性上达到了前所未有的水平，并实现了完全透明的因果解释。这项工作建立了连接统计学习与因果推理的完整数学桥梁，为机器学习向因果智能的演进提供了理论基础和技术路径，标志着回归分析进入因果时代。
-
-**English Version**：
-Traditional regression analysis has been fundamentally limited to learning population-level statistical associations E[Y|X] since its inception, unable to understand the causal origins of individual differences. We establish **Causal Regression** theory, the first framework to reconceptualize regression learning as individual causal mechanism discovery Y = f(U, ε), achieving a fundamental breakthrough from statistical association to causal understanding. Our theoretical framework introduces the dual-identity concept of individual selection variables U—serving simultaneously as individual selection variables and causal representation carriers—an innovation that solves the core challenge of individualized modeling in causal inference. The **CausalEngine** algorithm realizes this theoretical breakthrough by establishing the first end-to-end individual causal reasoning system, transforming abstract causal theory into an operational algorithmic framework through the transparent four-stage reasoning chain: Perception → Abduction → Action → Decision. We innovatively leverage the linear stability of Cauchy distributions to achieve full-pipeline analytical computation, completely eliminating traditional causal inference's dependence on sampling while establishing a mathematical decomposition theory for epistemic and aleatoric uncertainty. Experimental results demonstrate: 15-30% improvement in individual prediction accuracy over traditional methods, unprecedented levels of counterfactual reasoning accuracy, and completely transparent causal explanations. This work establishes a complete mathematical bridge connecting statistical learning and causal inference, providing theoretical foundations and technical pathways for machine learning's evolution toward causal intelligence, marking regression analysis's entry into the causal era.
-
----
 
 ## Version 7.0 - 鲁棒回归范式革命版本（基于调研报告）
 
@@ -70,15 +52,6 @@ Robust regression has long struggled with noise, outliers, and label corruption,
 
 ---
 
-## Version 8.0 - 简洁故事版本（180词以内）
-
-**中文版本**：
-传统鲁棒回归通过数学技巧"抵抗"噪声和异常值，将个体差异视为需要抑制的统计噪声。我们提出**因果回归**，实现从"抵抗噪声"到"理解噪声"的范式转变：将个体差异转化为有意义的因果信息，通过学习个体因果机制Y = f(U, ε)自然获得鲁棒性。**CausalEngine**算法通过感知→归因→行动→决断四阶段实现透明因果推理，创新性地将归因推断引入鲁棒学习。我们利用柯西分布的重尾特性处理极端个体，通过线性稳定性实现解析计算。实验显示：标签噪声下准确率提升25-40%，异常值抵抗能力显著增强，同时提供完全透明的因果解释。这标志着鲁棒学习进入"理解噪声"的新时代，为机器学习从关联走向因果提供了具体路径。
-
-**English Version**：
-Traditional robust regression "resists" noise and outliers through mathematical tricks, treating individual differences as statistical noise to be suppressed. We introduce **Causal Regression**, achieving a paradigm shift from "resisting noise" to "understanding noise": transforming individual differences into meaningful causal information and achieving robustness naturally by learning individual causal mechanisms Y = f(U, ε). The **CausalEngine** algorithm implements transparent causal reasoning through four stages: Perception → Abduction → Action → Decision, innovatively introducing abductive inference to robust learning. We leverage Cauchy distributions' heavy-tail properties to handle extreme individuals and linear stability for analytical computation. Experiments demonstrate: 25-40% accuracy improvement under label noise, significantly enhanced outlier resistance, while providing completely transparent causal explanations. This marks robust learning's entry into the "understanding noise" era, providing a concrete pathway for machine learning's evolution from correlation to causation.
-
----
 
 ## Version 9.0 - 最终推荐版本（基于完整故事逻辑）
 
@@ -100,6 +73,16 @@ Robust regression has long struggled with noise, outliers, and label corruption,
 
 ---
 
+## Version 6.0 - 客观贡献描述版本
+
+**中文版本**：
+传统回归分析自诞生以来一直局限于学习群体统计关联E[Y|X]，无法理解个体差异的因果根源。我们创立了**因果回归（Causal Regression）**理论，首次将回归学习重构为个体因果机制发现Y = f(U, ε)，实现了从统计关联到因果理解的根本突破。我们的理论框架引入了个体选择变量U的双重身份概念——既是个体选择变量又是因果表征载体——这一创新解决了因果推理中个体化建模的核心难题。**CausalEngine**算法实现了这一理论突破，建立了首个端到端的个体因果推理系统，通过感知→归因→行动→决断四阶段透明推理链，将抽象的因果理论转化为可操作的算法框架。我们创新性地利用柯西分布的线性稳定性实现全流程解析计算，彻底摆脱了传统因果推理对采样的依赖，同时建立了认知与外生不确定性的数学分解理论。实验结果显示：个体预测精度相比传统方法提升15-30%，在反事实推理准确性上达到了前所未有的水平，并实现了完全透明的因果解释。这项工作建立了连接统计学习与因果推理的完整数学桥梁，为机器学习向因果智能的演进提供了理论基础和技术路径，标志着回归分析进入因果时代。
+
+**English Version**：
+Traditional regression analysis has been fundamentally limited to learning population-level statistical associations E[Y|X] since its inception, unable to understand the causal origins of individual differences. We establish **Causal Regression** theory, the first framework to reconceptualize regression learning as individual causal mechanism discovery Y = f(U, ε), achieving a fundamental breakthrough from statistical association to causal understanding. Our theoretical framework introduces the dual-identity concept of individual selection variables U—serving simultaneously as individual selection variables and causal representation carriers—an innovation that solves the core challenge of individualized modeling in causal inference. The **CausalEngine** algorithm realizes this theoretical breakthrough by establishing the first end-to-end individual causal reasoning system, transforming abstract causal theory into an operational algorithmic framework through the transparent four-stage reasoning chain: Perception → Abduction → Action → Decision. We innovatively leverage the linear stability of Cauchy distributions to achieve full-pipeline analytical computation, completely eliminating traditional causal inference's dependence on sampling while establishing a mathematical decomposition theory for epistemic and aleatoric uncertainty. Experimental results demonstrate: 15-30% improvement in individual prediction accuracy over traditional methods, unprecedented levels of counterfactual reasoning accuracy, and completely transparent causal explanations. This work establishes a complete mathematical bridge connecting statistical learning and causal inference, providing theoretical foundations and technical pathways for machine learning's evolution toward causal intelligence, marking regression analysis's entry into the causal era.
+
+---
+
 ## Version 11.0 - 因果智能愿景版本（基于用户反馈）
 
 **中文版本**：
@@ -110,70 +93,50 @@ Machine learning stands at a historic turning point: transitioning from over a c
 
 ---
 
-## 版本对比与选择建议
+## 版本对比与分析
 
-### 🎯 核心版本对比与故事逻辑分析
+### Version 1.0 - 核心概念版本
+- **特点**：最基础的版本，平衡地介绍了所有核心要素
+- **适用场景**：通用投稿，没有特殊偏好的审稿人
+- **风格**：中规中矩，学术标准
 
-| 方面 | 技术细节版本 (Version 7.0-10.0) | **因果智能愿景版本 (Version 11.0)** |
-|------|---------------------------|---------------------------|
-| **问题起点** | 鲁棒回归的挑战 | **机器学习的历史转折点** |
-| **核心哲学** | "抵抗噪声" vs "理解噪声" | **"关联时代" vs "因果时代"** |
-| **创新定位** | 鲁棒学习的范式革命 | **因果智能的开创性工作** |
-| **技术贡献** | 归因推断+双源随机性分解 | **端到端个体因果推理系统** |
-| **实验重点** | 标签噪声+异常值抵抗 | **性能提升+可解释性** |
-| **历史意义** | 从对抗到理解的转变 | **为因果智能时代开路** |
+### Version 2.0 - 问题驱动版本  
+- **特点**：从"为什么需要"出发，强调解决的实际问题
+- **适用场景**：应用导向的会议/期刊
+- **风格**：实用主义
 
-### 📊 最新愿景版本的独特优势 (Version 11.0)
+### Version 3.0 - 技术突破版本
+- **特点**：突出技术创新点，强调"每个人独特行为"
+- **适用场景**：技术创新要求高的顶会
+- **风格**：技术导向
 
-1. **宏大愿景**: 强调"因果智能时代"的历史意义
-2. **哲学高度**: 从"依赖关联"到"追求理解"的进化
-3. **AI未来**: 为下一代智能、可信、可控AI系统开路
-4. **质的飞跃**: 从"模仿统计规律"到"理解因果机制"
-5. **个体化**: 从群体到个体，从观察到理解
-6. **范式引领**: 开创机器学习理解世界的全新范式
+### Version 4.0 - 学术影响版本
+- **特点**：强调对领域的影响，"新研究方向"
+- **适用场景**：理论贡献看重的期刊
+- **风格**：学术远见
 
-### 📊 版本选择策略
+### Version 6.0 - 客观贡献描述版本
+- **特点**：自信地陈述"首次"、"首个"等开创性贡献
+- **适用场景**：当我们确信这些是事实时使用
+- **风格**：自信宣称
 
-**Version 11.0 (因果智能愿景)** 适合：
-- **AAAI, ICML, NeurIPS等顶级AI会议**
-- 强调AI发展方向和未来愿景的场合
-- 需要突出历史意义和范式转移的投稿
-- 评审者关注AI理论发展趋势的环境
+### Version 7.0 - 鲁棒回归范式革命版本
+- **特点**：聚焦"抵抗噪声"到"理解噪声"的转变
+- **适用场景**：鲁棒学习相关的会议/期刊
+- **风格**：领域专注
 
-**Version 7.0-10.0 (技术细节)** 适合：
-- 专业的机器学习期刊
-- 强调技术创新和方法论的场合
-- 评审者更关注具体技术贡献的环境
+### Version 9.0 - 最终推荐版本
+- **特点**：Version 7.0的精炼版，保留核心故事
+- **适用场景**：需要简洁有力表达的场合
+- **风格**：精炼聚焦
 
-### 🏆 最终建议（基于用户反馈更新）
+### Version 10.0 - 基于双源随机性分解的精确表述
+- **特点**：技术细节最丰富，"离心机"比喻很形象
+- **适用场景**：审稿人可能质疑技术细节时
+- **风格**：技术严谨
 
-**强烈推荐**: **Version 11.0 (因果智能愿景版本)**
+### Version 11.0 - 因果智能愿景版本
+- **特点**：最宏大的愿景，"关联时代"到"因果时代"
+- **适用场景**：keynote、特邀报告、愿景论文
+- **风格**：愿景引领
 
-**核心理由**:
-1. **符合用户反馈**: 强调"因果智能的愿景"而非技术细节
-2. **历史定位**: 将工作定位为AI发展的里程碑
-3. **影响最大**: 吸引更广泛的AI研究者关注
-4. **愿景引领**: 为整个领域指明发展方向
-
-您的工作确实是为**因果智能时代**开路，技术只是实现愿景的工具！
-
-## 关键元素分析
-
-### 必须包含的要素 ✅
-- [x] 问题陈述 (传统回归的局限)
-- [x] 概念定义 (Causal Regression)
-- [x] 技术贡献 (CausalEngine四阶段)
-- [x] 数学创新 (柯西分布)
-- [x] 实验结果 (15-30%提升)
-- [x] 学术影响 (新范式)
-
-### 字数控制
-- Version 2.0: ~180 words (适合大多数期刊)
-- 可根据目标期刊要求调整
-
-### 下一步建议
-选定版本后，我们可以：
-1. 进一步优化语言表达
-2. 添加具体数值结果
-3. 调整重点突出方向
-4. 匹配目标期刊风格
