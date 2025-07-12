@@ -133,6 +133,115 @@ class RegressionHead(DecisionHead):
             return CauchyMath.nll_loss(y_true, mu_pred, gamma_pred, reduction=reduction) * self.factor
 
 
+class BinaryClassificationHead(DecisionHead):
+    """二分类专用决断头
+    
+    使用单个 Cauchy 分布的 decision score 进行二分类。
+    通过 Cauchy survival function 计算类别概率。
+    
+    数学原理：
+    - 单个 decision score: S ~ Cauchy(μ_S, γ_S)
+    - 类别概率: P(y=1) = P(S > threshold)
+    - 使用 Cauchy CDF 而非 sigmoid
+    """
+    
+    def __init__(self, threshold=0.0, threshold_trainable=False, factor=1.0):
+        """
+        Args:
+            threshold: 分类阈值，默认为 0.0
+            threshold_trainable: 阈值是否可学习
+            factor: 损失函数的缩放因子
+        """
+        super().__init__(output_size=1, factor=factor)
+        
+        if threshold_trainable:
+            self.threshold = nn.Parameter(torch.tensor(threshold, dtype=torch.float32))
+        else:
+            self.register_buffer('threshold', torch.tensor(threshold, dtype=torch.float32))
+            
+    def forward(
+        self,
+        decision_scores: Tuple[torch.Tensor, torch.Tensor],
+        mode: str = 'standard'
+    ) -> torch.Tensor:
+        """
+        计算二分类概率。
+        
+        Returns:
+            shape [batch_size, 2] 的概率张量 [P(y=0), P(y=1)]
+        """
+        mu_S, gamma_S = decision_scores
+        # mu_S 和 gamma_S 的 shape: [batch_size, 1]
+        
+        if mode == 'deterministic':
+            # 确定性模式：直接比较 μ_S 和阈值
+            prob_positive = (mu_S > self.threshold).float()
+        else:
+            # 分布模式：计算 P(S > threshold)
+            prob_positive = CauchyMath.survival_function(
+                self.threshold, mu_S, gamma_S
+            )
+        
+        # 构造 [P(y=0), P(y=1)] 以保持接口一致性
+        prob_negative = 1.0 - prob_positive
+        return torch.cat([prob_negative, prob_positive], dim=-1)
+    
+    def compute_loss(
+        self,
+        y_true: torch.Tensor,
+        decision_scores: Tuple[torch.Tensor, torch.Tensor],
+        mode: str = 'standard',
+        reduction: str = 'mean'
+    ) -> torch.Tensor:
+        """
+        计算二分类损失。
+        
+        Args:
+            y_true: 真实标签，shape [batch_size], 值为 0 或 1
+            decision_scores: (mu_S, gamma_S) 元组
+            mode: 推理模式
+            reduction: 损失归约方式
+        """
+        mu_S, gamma_S = decision_scores
+        
+        if mode == 'deterministic':
+            # 确定性模式：使用 BCEWithLogitsLoss，它在数值上更稳定，
+            # 并且直接作用于模型的原始输出 mu_S（即 logits）。
+            # 这使得训练目标与 `forward` 方法中的预测逻辑 (mu_S > threshold) 保持一致。
+            return nn.functional.binary_cross_entropy_with_logits(
+                mu_S.squeeze(-1), 
+                y_true.float(),
+                reduction=reduction
+            )
+        else:
+            # 分布模式：基于概率的 BCE 损失
+            prob_positive = CauchyMath.survival_function(
+                self.threshold, mu_S, gamma_S
+            ).squeeze(-1)  # [batch_size]
+            
+            # 计算 BCE 损失
+            eps = 1e-8
+            prob_positive = torch.clamp(prob_positive, eps, 1 - eps)
+            
+            # 确保 y_true 是浮点型
+            y_true_float = y_true.float()
+            
+            bce_loss = -(y_true_float * torch.log(prob_positive) + 
+                        (1 - y_true_float) * torch.log(1 - prob_positive))
+            
+            loss = bce_loss * self.factor
+        
+        # 应用 reduction
+        if reduction == 'mean':
+            return torch.mean(loss)
+        elif reduction == 'sum':
+            return torch.sum(loss)
+        elif reduction == 'none':
+            return loss
+        else:
+            raise ValueError(f"Unknown reduction: {reduction}")
+
+
 class ClassificationHead(DecisionHead):
     """分类任务专用决断头 (One-vs-Rest)
     
@@ -237,6 +346,12 @@ def create_decision_head(
         output_size (int): 任务的输出维度 (例如，回归特征数或分类类别数)。
         task_type (str): 任务类型，'regression' 或 'classification'。
         **kwargs: 传递给特定决断头构造函数的额外参数。
+            对于分类任务，支持：
+            - binary_mode: 二分类处理模式 ('ovr' 或 'single_score')
+            - ovr_threshold: OvR 阈值
+            - learnable_threshold: 阈值是否可学习
+            - threshold: 二分类阈值（single_score 模式）
+            - threshold_trainable: 二分类阈值是否可学习（single_score 模式）
 
     Returns:
         DecisionHead: 一个具体的 DecisionHead 子类实例。
@@ -248,11 +363,27 @@ def create_decision_head(
     if task == TaskType.REGRESSION:
         return RegressionHead(output_size=output_size)
     elif task == TaskType.CLASSIFICATION:
-        return ClassificationHead(
-            n_classes=output_size,
-            ovr_threshold=kwargs.get('ovr_threshold', 0.0),
-            learnable_threshold=kwargs.get('learnable_threshold', False)
-        )
+        # 提取 binary_mode 参数
+        binary_mode = kwargs.pop('binary_mode', 'ovr')
+        
+        # 对于二分类的 single_score 模式，MLPCausalClassifier 会传入 output_size=1
+        # 因此需要检查两种情况：
+        # 1. output_size=2 且 binary_mode='single_score' (原始类别数为2)
+        # 2. output_size=1 且 binary_mode='single_score' (已经调整过的输出维度)
+        if (output_size == 2 and binary_mode == 'single_score') or \
+           (output_size == 1 and binary_mode == 'single_score'):
+            return BinaryClassificationHead(
+                threshold=kwargs.get('threshold', 0.0),
+                threshold_trainable=kwargs.get('threshold_trainable', False),
+                factor=kwargs.get('factor', 1.0)
+            )
+        else:
+            # 多分类或二分类的 OvR 模式
+            return ClassificationHead(
+                n_classes=output_size,
+                ovr_threshold=kwargs.get('ovr_threshold', 0.0),
+                learnable_threshold=kwargs.get('learnable_threshold', False)
+            )
     else:
         # 这段代码理论上不可达，因为 TaskType(task_type) 会在无效时提前失败
         raise ValueError(f"Unknown task type provided: {task_type}")

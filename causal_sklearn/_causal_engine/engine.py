@@ -109,6 +109,7 @@ class CausalEngine(nn.Module):
         b_noise_trainable: 外生噪声是否可训练
         ovr_threshold: 分类任务的OvR阈值
         learnable_threshold: 是否可学习阈值
+        binary_mode: 二分类模式 ('ovr' 或 'single_score')
         alpha: 正则化参数
     """
     
@@ -128,6 +129,7 @@ class CausalEngine(nn.Module):
         b_noise_trainable: bool = True, # 外生噪声是否可训练
         ovr_threshold: float = 0.0, # 分类任务的OvR阈值初始化
         learnable_threshold: bool = False, # 是否可学习阈值
+        binary_mode: str = 'ovr', # 二分类模式
         alpha: float = 0.0 # L2正则化参数
     ):
         super().__init__()
@@ -143,6 +145,7 @@ class CausalEngine(nn.Module):
         self.repre_size = repre_size
         self.causal_size = causal_size
         self.task_type = TaskType(task_type)
+        self.binary_mode = binary_mode
         
         # 四阶段网络架构
         
@@ -178,7 +181,8 @@ class CausalEngine(nn.Module):
             output_size=self.output_size,
             task_type=self.task_type.value,
             ovr_threshold=ovr_threshold,
-            learnable_threshold=learnable_threshold
+            learnable_threshold=learnable_threshold,
+            binary_mode=binary_mode
         )
         
         # Optimizer

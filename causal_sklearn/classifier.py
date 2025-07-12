@@ -116,6 +116,11 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
     ovr_threshold : float, default=0.0
         Threshold for One-vs-Rest classification.
         
+    binary_mode : str, default='ovr'
+        Binary classification mode. Options:
+        - 'ovr': Use One-vs-Rest approach (default, backward compatible)
+        - 'single_score': Use single decision score (more elegant for binary)
+        
     max_iter : int, default=1000
         Maximum number of training iterations.
         
@@ -152,6 +157,7 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
         b_noise_init=0.1,
         b_noise_trainable=True,
         ovr_threshold=0.0,
+        binary_mode='ovr',
         max_iter=1000,
         learning_rate=0.001,
         early_stopping=True,
@@ -172,6 +178,7 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
         self.b_noise_init = b_noise_init
         self.b_noise_trainable = b_noise_trainable
         self.ovr_threshold = ovr_threshold
+        self.binary_mode = binary_mode
         self.max_iter = max_iter
         self.learning_rate = learning_rate
         self.early_stopping = early_stopping
@@ -195,9 +202,16 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
         
     def _build_model(self):
         """Build CausalEngine model"""
+        # 对于二分类的 single_score 模式，调整 output_size
+        n_classes = len(self.classes_)
+        if n_classes == 2 and self.binary_mode == 'single_score':
+            engine_output_size = 1  # 单个 decision score
+        else:
+            engine_output_size = n_classes  # OvR 模式
+            
         return CausalEngine(
             input_size=self.n_features_in_,
-            output_size=len(self.classes_),
+            output_size=engine_output_size,
             repre_size=self.repre_size,
             causal_size=self.causal_size,
             task_type='classification',
@@ -207,6 +221,7 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
             b_noise_init=self.b_noise_init,
             b_noise_trainable=self.b_noise_trainable,
             ovr_threshold=self.ovr_threshold,
+            binary_mode=self.binary_mode,
             alpha=self.alpha
         )
         
@@ -532,6 +547,13 @@ class MLPCausalClassifier(BaseEstimator, ClassifierMixin):
             # Convert to numpy
             location_np = location.cpu().numpy()
             scale_np = scale.cpu().numpy()
+            
+            # Handle different output shapes based on binary_mode
+            if len(self.classes_) == 2 and self.binary_mode == 'single_score':
+                # For single_score mode, expand to shape (n_samples, 1, 2)
+                # to maintain consistent API
+                location_np = location_np.reshape(-1, 1)
+                scale_np = scale_np.reshape(-1, 1)
             
             # Stack location and scale as the last dimension
             # Shape: (n_samples, n_classes, 2) where last dim is [location, scale]
