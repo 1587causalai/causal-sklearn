@@ -51,10 +51,10 @@ warnings.filterwarnings('ignore')
 
 BINARY_ROBUSTNESS_CONFIG = {
     # 数据集选择 - 可选多个二分类数据集
-    'dataset': 'spambase',  # 可选: 'breast_cancer', 'adult', 'bank_marketing', 'spambase'
+    'dataset': 'breast_cancer',  # 可选: 'breast_cancer', 'adult', 'bank_marketing', 'spambase'
     
     # 噪声级别设置
-    'noise_levels': np.linspace(0, 1, 6),  # 0%, 10%, 20%, ..., 100%
+    'noise_levels': np.linspace(0, 1, 11),  # 0%, 10%, 20%, ..., 100%
     
     # 数据参数
     'random_state': 42,     # 固定随机种子
@@ -69,7 +69,7 @@ BINARY_ROBUSTNESS_CONFIG = {
     'batch_size': None,             # 批处理大小
     
     # 稳定性改进参数
-    'n_runs': 2,                     # 5次运行
+    'n_runs': 5,                     # 5次运行
     'base_random_seed': 42,          # 基础随机种子
     
     # 额外稳定性参数

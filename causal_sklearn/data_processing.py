@@ -45,8 +45,11 @@ def inject_shuffle_noise(
     if noise_ratio == 0 or n_samples == 0:
         return y.copy(), np.array([], dtype=int)
 
+    # 确保 y 是 numpy 数组，避免 pandas Series 的索引问题
+    y_np = np.asarray(y)
+
     # 1. 创建一个全局洗牌后的标签副本 y'
-    y_shuffled = y.copy()
+    y_shuffled = y_np.copy()
     np.random.shuffle(y_shuffled)
 
     # 2. 随机选择要污染的索引
@@ -54,7 +57,7 @@ def inject_shuffle_noise(
     noise_indices = np.random.choice(n_samples, size=n_noisy, replace=False)
 
     # 3. 创建一个新的 y_noisy 向量
-    y_noisy = y.copy()
+    y_noisy = y_np.copy()
     
     # 4. 在选定的索引处，用 y' 的值替换 y 的值
     y_noisy[noise_indices] = y_shuffled[noise_indices]
