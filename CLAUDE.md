@@ -18,7 +18,6 @@ python scripts/quick_test_causal_engine_extended.py
 
 # Specific functionality tests
 python scripts/test_causal_split.py
-python scripts/benchmark_example.py
 ```
 
 ### Robustness Testing (Key Feature)
@@ -158,3 +157,71 @@ Causal Representation (U) → Action → Decision Scores (S) → Decision Head �
 ## Development Philosophy
 
 The library focuses on **causal understanding rather than just pattern matching**. The core insight is that individual differences are not "statistical noise" to be suppressed, but "causal information" to be understood through the individual selection variable U and universal causal laws f.
+
+## Project Language and Localization
+
+- Primary documentation and comments are in **Chinese** (中文)
+- Mathematical notation follows international standards
+- API and code interfaces follow English conventions for scikit-learn compatibility
+- README.md and key documentation use Chinese to serve the primary user base
+
+## Running Single Tests
+
+```bash
+# Run a specific test file
+pytest tests/test_specific_file.py
+
+# Run a specific test function
+pytest tests/test_file.py::test_function_name
+
+# Run with verbose output
+pytest -v tests/
+
+# Run with coverage
+pytest --cov=causal_sklearn tests/
+```
+
+## Understanding Test Results
+
+- Results are saved in `results/` with timestamped subdirectories
+- Each test generates:
+  - Numerical results in `.txt` files
+  - Performance plots in `.png` files
+  - Comparison tables for different methods
+- Look for "standard" mode results for best performance indicators
+
+## Key Files to Understand
+
+### Core Implementation
+- `causal_sklearn/_causal_engine/engine.py`: The heart of CausalEngine implementation
+- `causal_sklearn/regressor.py`: User-facing regression models
+- `causal_sklearn/classifier.py`: User-facing classification models
+
+### Quick Understanding Scripts
+- `scripts/quick_test_causal_engine.py`: Best starting point to understand performance
+- `examples/comprehensive_causal_modes_tutorial_sklearn_style.py`: Demonstrates all modes
+
+## Common Development Tasks
+
+### Adding a New Model
+1. Inherit from appropriate base class in `causal_sklearn/`
+2. Follow existing model patterns (see `MLPCausalRegressor` for reference)
+3. Ensure scikit-learn API compatibility
+4. Add to `__init__.py` exports
+5. Test with `quick_test_causal_engine.py`
+
+### Modifying CausalEngine
+1. Core logic is in `_causal_engine/engine.py`
+2. Network components in `_causal_engine/networks.py`
+3. Mathematical operations in `_causal_engine/math_utils.py`
+4. Always test changes with noise robustness scripts
+
+### Publishing Updates
+```bash
+# Use the automated publishing script
+python publish.py
+
+# Or manually:
+python setup.py sdist bdist_wheel
+twine upload dist/*
+```
