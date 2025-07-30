@@ -21,6 +21,9 @@ python scripts/test_causal_split.py
 
 # Binary classification robustness testing
 python scripts/binary_classification_robustness_real_datasets.py
+
+# Generate flowchart explaining the scripts
+python scripts/scripts_comparison_flowchart_english.py
 ```
 
 ### Robustness Testing (Key Feature)
@@ -56,32 +59,51 @@ pip install -e ".[dev]"
 # Install with examples dependencies for plotting
 pip install -e ".[examples]"
 
-# Build and publish
-python setup.py sdist bdist_wheel
+# Build using modern Python build tools
+python -m build --no-isolation
+
+# Check package integrity
+twine check dist/*
 
 # Publishing options
 python publish.py               # Interactive mode (asks for target)
 python publish.py --build-only  # Build only, no upload
 python publish.py --test        # Upload to TestPyPI
 python publish.py --release     # Upload to PyPI (requires double confirmation)
+
+# Test local installation
+python -m venv test_env
+source test_env/bin/activate  # Linux/Mac
+test_env\Scripts\activate     # Windows
+pip install dist/*.whl
+python -c 'import causal_sklearn; print(causal_sklearn.__version__)'
+deactivate
 ```
 
-### Code Quality (from pyproject.toml)
+### Code Quality
 ```bash
-# Code formatting
-black .
+# Code formatting (88 char line length)
+black . --line-length=88 --target-version=py38
 
 # Linting
 flake8 .
 
 # Type checking
-mypy .
+mypy . --python-version=3.8 --warn-return-any --warn-unused-configs
 
-# Testing
+# Testing with pytest
 pytest tests/
+pytest --cov=causal_sklearn tests/  # with coverage
 
 # Run specific test
-pytest tests/test_specific_functionality.py
+pytest tests/test_specific_functionality.py::test_function_name
+```
+
+### Paper and Documentation
+```bash
+# Compile LaTeX paper
+cd paper/AuthorKit26/AnonymousSubmission/LaTeX/
+./compile.sh
 ```
 
 ## Architecture Overview
@@ -139,15 +161,22 @@ Causal Representation (U) → Action → Decision Scores (S) → Decision Head �
 - **Always run** `python scripts/quick_test_causal_engine.py` after changes - this is the primary validation
 - The `standard` mode typically shows the best performance in noisy conditions
 - The `deterministic` mode serves as a causal baseline roughly equivalent to traditional ML
+- Real tests are in `scripts/` directory, not `tests/` (which is minimal)
 
 ### Data Handling
 - All models auto-standardize features and encode labels
 - Support for sample weights and early stopping with validation
 - Scikit-learn API compatibility (`fit`, `predict`, `score`, `predict_proba`)
+- Support for sklearn built-in datasets and OpenML dataset fetching
 
 ### Mathematical Stability
 - Cauchy distribution enables analytical computation without sampling
 - Linear stability property: `aX + b ~ Cauchy(aμ + b, |a|γ)` if `X ~ Cauchy(μ, γ)`
+
+### Three-Step Tuning Approach (from TODO.md)
+1. **Baseline**: Get traditional MLP working well
+2. **PyTorch MLP**: Ensure neural network basics are correct
+3. **CausalEngine**: Apply causal framework (may need different learning rates)
 
 ## Important Documentation
 
@@ -161,8 +190,11 @@ Causal Representation (U) → Action → Decision Scores (S) → Decision Head �
 
 ## Results and Outputs
 
-- Test results saved in `results/` directory with subdirectories for different test types
-- Performance plots and numerical results automatically generated
+- Test results saved in `results/` directory with subdirectories for different test types:
+  - `results/regression_real_datasets/`: Regression robustness results
+  - `results/binary_classification_robustness/`: Classification robustness results
+  - `results/quick_test_results/`: Quick validation results
+- Performance plots (`.png`) and numerical results (`.npy`, `.txt`) automatically generated
 - Robustness curves show performance across noise levels (0%-100%)
 
 ## Development Philosophy
@@ -175,31 +207,6 @@ The library focuses on **causal understanding rather than just pattern matching*
 - Mathematical notation follows international standards
 - API and code interfaces follow English conventions for scikit-learn compatibility
 - README.md and key documentation use Chinese to serve the primary user base
-
-## Running Single Tests
-
-```bash
-# Run a specific test file
-pytest tests/test_specific_file.py
-
-# Run a specific test function
-pytest tests/test_file.py::test_function_name
-
-# Run with verbose output
-pytest -v tests/
-
-# Run with coverage
-pytest --cov=causal_sklearn tests/
-```
-
-## Understanding Test Results
-
-- Results are saved in `results/` with timestamped subdirectories
-- Each test generates:
-  - Numerical results in `.txt` files
-  - Performance plots in `.png` files
-  - Comparison tables for different methods
-- Look for "standard" mode results for best performance indicators
 
 ## Key Files to Understand
 
@@ -229,11 +236,15 @@ pytest --cov=causal_sklearn tests/
 
 ### Publishing Updates
 ```bash
+# Clean old builds first
+rm -rf build dist *.egg-info
+
 # Use the automated publishing script
 python publish.py
 
 # Or manually:
-python setup.py sdist bdist_wheel
+python -m build --no-isolation
+twine check dist/*
 twine upload dist/*
 ```
 

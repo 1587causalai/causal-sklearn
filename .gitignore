@@ -114,3 +114,10 @@ paper/AuthorKit26/*
 !paper/AuthorKit26/AnonymousSubmission/LaTeX/*.bib
 !paper/AuthorKit26/AnonymousSubmission/LaTeX/*.sty
 !paper/AuthorKit26/AnonymousSubmission/LaTeX/*.bst
+
+
+# files
+TODO.md
+CLAUDE.md
+research_prompt_v2.md
+research_prompt.md
