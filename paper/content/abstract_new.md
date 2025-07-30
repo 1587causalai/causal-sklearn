@@ -21,7 +21,7 @@ Experiments demonstrate remarkable robustness—30% label noise reduces traditio
 ## Key Elements Coverage
 
 ✅ **开篇悬念**: 房价数据无treatment但可做因果分析
-✅ **核心范式转变**: 从E[Y|X]到Y=f(U,ε)的根本转换
+✅ **核心范式转变**: 从 $E[Y|X]$ 到 $Y=f(U,\varepsilon)$ 的根本转换
 ✅ **U的革命性**: 双重身份（选择+表征）清晰阐述
 ✅ **双源分解**: 内生vs外生不确定性
 ✅ **技术优雅**: 柯西分布和解析计算

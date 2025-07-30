@@ -18,6 +18,9 @@ python scripts/quick_test_causal_engine_extended.py
 
 # Specific functionality tests
 python scripts/test_causal_split.py
+
+# Binary classification robustness testing
+python scripts/binary_classification_robustness_real_datasets.py
 ```
 
 ### Robustness Testing (Key Feature)
@@ -55,7 +58,12 @@ pip install -e ".[examples]"
 
 # Build and publish
 python setup.py sdist bdist_wheel
-python publish.py  # Automated publishing script
+
+# Publishing options
+python publish.py               # Interactive mode (asks for target)
+python publish.py --build-only  # Build only, no upload
+python publish.py --test        # Upload to TestPyPI
+python publish.py --release     # Upload to PyPI (requires double confirmation)
 ```
 
 ### Code Quality (from pyproject.toml)
@@ -147,6 +155,9 @@ Causal Representation (U) → Action → Decision Scores (S) → Decision Head �
 - **`docs/ONE_PAGER.md`**: Executive summary
 - **`docs/U_deep_dive.md`**: Deep dive into individual selection variable U
 - **`docs/blog_post_causal_sklearn.md`**: Comprehensive introduction blog post
+- **`docs/cognitive_reconstruction.md`**: Cognitive reconstruction theory
+- **`docs/core_mathematical_framework.md`**: Extended mathematical frameworks
+- **`docs/decision_framework.md`**: Decision making framework
 
 ## Results and Outputs
 
@@ -225,3 +236,20 @@ python publish.py
 python setup.py sdist bdist_wheel
 twine upload dist/*
 ```
+
+## Installation Verification
+
+After installation, verify with:
+```python
+import causal_sklearn
+print(f"Causal-sklearn version: {causal_sklearn.__version__}")
+print("安装成功！🎉")
+```
+
+## Project Metadata
+
+- **Python Version**: 3.8-3.11 supported
+- **Development Status**: Alpha
+- **License**: Apache-2.0
+- **Homepage**: https://github.com/1587causalai/causal-sklearn
+- **Bug Reports**: https://github.com/1587causalai/causal-sklearn/issues
