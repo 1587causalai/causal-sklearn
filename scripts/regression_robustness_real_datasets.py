@@ -64,7 +64,7 @@ warnings.filterwarnings('ignore')
 
 CONFIG = {
     # 数据集选择 - 支持扩展数据集
-    'dataset_name': 'bike_sharing',  # 支持所有EXTENDED_REGRESSION_DATASETS中的数据集 bike_sharing,boston,california_housing, ... 
+    'dataset_name': 'bike_sharing',  # 支持所有 EXTENDED_REGRESSION_DATASETS 中的数据集 bike_sharing,boston,california_housing, ... 
     'use_extended_datasets': True,  # 是否使用扩展数据集加载器
     
     # 噪声级别设置

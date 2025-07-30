@@ -29,3 +29,21 @@ Experiments demonstrate remarkable robustness—30% label noise reduces traditio
 ✅ **认知重塑**: 个体差异从"噪声"到"信息"
 
 字数：英文~200词，中文~250字
+
+
+
+  Traditional machine learning approaches learn conditional expectations $E[Y|X]$ to minimize prediction error, treating individual variations as statistical noise. We propose a fundamentally
+  different paradigm: learning the causal generative process $Y = f(U, \varepsilon)$, where $U$ represents individual-specific causal characteristics and $\varepsilon$ captures environmental randomness.
+
+  We introduce CausalEngine, a four-stage neural architecture that implements this causal learning framework. The architecture consists of: (1) Perception stage that extracts relevant features
+  $X \to Z$, (2) Abduction stage that infers individual causal representations as Cauchy distributions $U \sim \text{Cauchy}(\mu_U, \gamma_U)$, (3) Action stage that applies universal causal transformations $U \to S$, and (4)
+  Decision stage that produces task-specific outputs $S \to Y$. The use of Cauchy distributions enables analytically tractable inference without sampling.
+
+  A key contribution is the explicit decomposition of uncertainty into two sources: endogenous uncertainty ($\gamma_U$) arising from incomplete knowledge about individuals, and exogenous uncertainty
+  ($b_{\text{noise}}$) from irreducible environmental randomness. This decomposition provides interpretable uncertainty quantification for each prediction.
+
+  Preliminary experiments on regression tasks demonstrate significant robustness advantages. Under label noise conditions, CausalEngine maintains stable performance while traditional neural
+  networks show substantial degradation.
+
+  By shifting the learning objective from statistical associations to causal mechanisms, this work offers a new perspective on building robust and interpretable machine learning systems that can
+  reason about individual differences rather than averaging them away.
