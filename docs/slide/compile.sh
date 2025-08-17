@@ -2,46 +2,53 @@
 
 # CausalEngine Presentation Compilation Script
 
-echo "Starting CausalEngine presentation compilation..."
+# --- Configuration ---
+DEFAULT_TARGET="causal_engine_presentation.tex"
+TARGET_FILE="${1:-$DEFAULT_TARGET}"
+BASE_NAME="${TARGET_FILE%.*}"
 
-# Check for pdflatex (standard LaTeX compiler)
+# --- Pre-flight Checks ---
+echo "Starting compilation for: $TARGET_FILE"
+
 if ! command -v xelatex &> /dev/null; then
     echo "Error: xelatex not found. Please install TeX Live or MacTeX."
     exit 1
 fi
 
-# Clean old files
-echo "Cleaning old files..."
-rm -f *.aux *.log *.nav *.out *.snm *.toc *.vrb *.pdf *.fls *.fdb_latexmk
+if [ ! -f "$TARGET_FILE" ]; then
+    echo "Error: Target file '$TARGET_FILE' not found."
+    exit 1
+fi
 
-# Compile document (run twice for proper TOC and references)
+# --- Compilation ---
+echo "Cleaning old files for $BASE_NAME..."
+rm -f "${BASE_NAME}".aux "${BASE_NAME}".log "${BASE_NAME}".nav "${BASE_NAME}".out "${BASE_NAME}".snm "${BASE_NAME}".toc "${BASE_NAME}".vrb "${BASE_NAME}".pdf "${BASE_NAME}".fls "${BASE_NAME}".fdb_latexmk
+
 echo "First compilation..."
-xelatex -interaction=nonstopmode causal_engine_presentation.tex
+xelatex -interaction=nonstopmode "$TARGET_FILE"
 
 echo "Second compilation (generating TOC)..."
-xelatex -interaction=nonstopmode causal_engine_presentation.tex
+xelatex -interaction=nonstopmode "$TARGET_FILE"
 
-# Check if PDF was successfully generated
-if [ -f "causal_engine_presentation.pdf" ]; then
+# --- Post-compilation ---
+if [ -f "${BASE_NAME}.pdf" ]; then
     echo "✅ Compilation successful!"
-    echo "📄 Output file: causal_engine_presentation.pdf"
+    echo "📄 Output file: ${BASE_NAME}.pdf"
     
-    # Clean intermediate files
     echo "Cleaning intermediate files..."
-    rm -f *.aux *.log *.nav *.out *.snm *.toc *.vrb *.fls *.fdb_latexmk
+    rm -f "${BASE_NAME}".aux "${BASE_NAME}".log "${BASE_NAME}".nav "${BASE_NAME}".out "${BASE_NAME}".snm "${BASE_NAME}".toc "${BASE_NAME}".vrb "${BASE_NAME}".fls "${BASE_NAME}".fdb_latexmk
     
-    # Auto-open PDF on macOS (optional)
     if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "Opening PDF in Preview..."
-        open causal_engine_presentation.pdf
+        open "${BASE_NAME}.pdf"
     fi
 else
     echo "❌ Compilation failed! Please check error log."
-    echo "View causal_engine_presentation.log for details."
+    echo "View ${BASE_NAME}.log for details."
     echo ""
     echo "Common issues and solutions:"
-    echo "1. Install required packages: sudo tlmgr install pgfplots"
+    echo "1. Install required packages: sudo tlmgr install <package>"
     echo "2. Update TeX distribution: sudo tlmgr update --all"
-    echo "3. For font issues, use pdflatex instead of xelatex"
+    echo "3. Ensure all fonts are installed on your system (e.g., PingFang SC for Chinese)."
     exit 1
 fi
