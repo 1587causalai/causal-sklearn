@@ -263,6 +263,48 @@ class GaussianMath:
     实现高斯分布的核心数学性质，与CauchyMath对应。
     """
     @staticmethod
+    def pdf(
+        x: torch.Tensor,
+        loc: torch.Tensor,
+        scale: torch.Tensor,
+        eps: float = 1e-8
+    ) -> torch.Tensor:
+        """
+        高斯分布概率密度函数 (PDF)
+        PDF(x | μ, σ²) = 1 / (σ * sqrt(2 * π)) * exp(-0.5 * ((x - μ) / σ)²)
+        """
+        sigma = torch.sqrt(scale.clamp(min=eps))
+        z = (x - loc) / sigma
+        return 1 / (sigma * torch.sqrt(torch.tensor(2 * np.pi))) * torch.exp(-0.5 * z * z)
+
+    @staticmethod
+    def cdf(
+        x: torch.Tensor,
+        loc: torch.Tensor,
+        scale: torch.Tensor,
+        eps: float = 1e-8
+    ) -> torch.Tensor:
+        """
+        高斯分布累积分布函数 (CDF)
+        CDF(x | μ, σ²) = 0.5 * (1 + erf((x - μ) / (σ * sqrt(2))))
+        """
+        sigma = torch.sqrt(scale.clamp(min=eps))
+        z = (x - loc) / (sigma * np.sqrt(2))
+        return 0.5 * (1 + torch.special.erf(z))
+
+    @staticmethod
+    def survival_function(
+        x: torch.Tensor,
+        loc: torch.Tensor,
+        scale: torch.Tensor,
+        eps: float = 1e-8
+    ) -> torch.Tensor:
+        """
+        高斯分布生存函数 (1 - CDF)
+        """
+        return 1.0 - GaussianMath.cdf(x, loc, scale, eps)
+
+    @staticmethod
     def nll_loss(
         y_true: torch.Tensor, 
         loc: torch.Tensor, 
