@@ -20,9 +20,9 @@ def _cauchy_nll(y_true, mu, gamma):
     return torch.log(torch.pi * gamma) + torch.log(1 + ((y_true - mu) / gamma)**2)
 
 def _gaussian_nll(y_true, mu, gamma):
-    # Here, gamma is interpreted as log(sigma^2) for stability
-    log_sigma_sq = gamma
-    return 0.5 * torch.exp(-log_sigma_sq) * (y_true - mu)**2 + 0.5 * log_sigma_sq
+    # Here, gamma is consistently treated as the variance (sigma^2)
+    sigma_sq = gamma.clamp(min=1e-8) # for stability
+    return 0.5 * torch.log(sigma_sq) + 0.5 * ((y_true - mu)**2 / sigma_sq)
 
 class NLLLoss(Loss):
     def __init__(self, distribution: str = 'cauchy'):

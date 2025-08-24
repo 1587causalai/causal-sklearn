@@ -1,38 +1,34 @@
 """
-Causal-Sklearn: Scikit-learn Compatible Causal Machine Learning
+Causal Engine: A Decoupled, Modular, and Extensible Causal Inference Engine
 
-基于 CausalEngine™ 算法的 scikit-learn 兼容实现，实现真正的因果推理机器学习。
+This package provides the core components for building causal machine learning models
+based on the CausalEngine™ algorithm.
 
-CausalEngine 核心创新：
-- 🧠 因果推理：理解 Y = f(U, ε) 而非学习 P(Y|X)
-- 🎯 四阶段架构：Perception → Abduction → Action → Decision
-- 📐 柯西数学：重尾分布 + 线性稳定性 = 解析计算
-- 🔧 五种模式：deterministic/exogenous/endogenous/standard/sampling
-- ⚡ 无需采样：完全解析化的不确定性传播
+Core Innovations of CausalEngine:
+- 🧠 **Causal Reasoning**: Models the causal mechanism Y = f(U, ε) instead of correlating P(Y|X).
+- 🏗️ **Modular Architecture**: Composable modules (Perception, Abduction, Action, Task) via dependency injection.
+- 📐 **Cauchy Mathematics**: Utilizes the linear stability of the Cauchy distribution for analytical uncertainty propagation.
+- 🔧 **Five Inference Modes**: Supports deterministic, exogenous, endogenous, standard, and sampling modes.
 
-理论基础：Distribution-consistency Structural Causal Models (arXiv:2401.15911)
-数学文档：docs/MATHEMATICAL_FOUNDATIONS_CN.md
+This library is the core PyTorch implementation. For a scikit-learn compatible wrapper, please see the `causal-sklearn` package (TBD).
 """
 
 from ._version import __version__
-from .regressor import MLPCausalRegressor, MLPPytorchRegressor, MLPHuberRegressor, MLPPinballRegressor, MLPCauchyRegressor
-from .classifier import MLPCausalClassifier, MLPPytorchClassifier
+from .core.engine import CausalEngine
+from . import defaults
+from . import tasks
 
 __all__ = [
     "__version__",
-    "MLPCausalRegressor", 
-    "MLPPytorchRegressor",
-    "MLPCausalClassifier",
-    "MLPPytorchClassifier",
-    "MLPHuberRegressor",
-    "MLPPinballRegressor", 
-    "MLPCauchyRegressor"
+    "CausalEngine",
+    "defaults",
+    "tasks",
 ]
 
 # Package metadata
 __author__ = "CausalEngine Team"
 __email__ = ""
 __license__ = "Apache-2.0"
-__description__ = "Scikit-learn compatible implementation of CausalEngine for causal machine learning"
+__description__ = "A decoupled, modular, and extensible causal inference engine in PyTorch"
 __theoretical_foundation__ = "Distribution-consistency Structural Causal Models (arXiv:2401.15911)"
 __core_innovation__ = "Four-stage causal reasoning: Perception → Abduction → Action → Decision"
