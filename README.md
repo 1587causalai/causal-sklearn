@@ -26,7 +26,7 @@ The `CausalEngine` is assembled by injecting four key modules at initialization:
 
 ```mermaid
 graph TD
-    subgraph "User Space: Build & Configure"
+    subgraph "Build and Configure"
         direction LR
         A[PerceptionModule]
         B[AbductionModule]
@@ -50,12 +50,17 @@ graph TD
 
 ### From Source (Recommended for Developers)
 
+The `causal-engine` is currently available on the `decoupled-engine` branch.
+
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/1587causalai/causal-sklearn.git
 cd causal-sklearn
 
-# Install in editable mode
+# 2. Switch to the new engine's branch
+git checkout decoupled-engine
+
+# 3. Install in editable mode
 pip install -e .
 ```
 
