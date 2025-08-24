@@ -254,3 +254,84 @@ class CauchyMath:
         samples = loc + scale * torch.tan(torch.pi * (uniform - 0.5))
         
         return samples
+
+
+class GaussianMath:
+    """
+    高斯分布数学工具类
+
+    实现高斯分布的核心数学性质，与CauchyMath对应。
+    """
+    @staticmethod
+    def nll_loss(
+        y_true: torch.Tensor, 
+        loc: torch.Tensor, 
+        scale: torch.Tensor,
+        reduction: str = 'mean',
+        eps: float = 1e-8
+    ) -> torch.Tensor:
+        """
+        高斯分布负对数似然损失
+
+        Args:
+            y_true: 真实值
+            loc: 预测位置参数 (μ)
+            scale: 预测尺度参数 (variance, σ²)
+            reduction: 损失归约方式
+        """
+        # Here, scale is consistently treated as the variance (sigma^2)
+        sigma_sq = scale.clamp(min=eps)
+        nll = 0.5 * torch.log(2 * torch.pi * sigma_sq) + 0.5 * ((y_true - loc)**2 / sigma_sq)
+        
+        if reduction == 'mean':
+            return torch.mean(nll)
+        elif reduction == 'sum':
+            return torch.sum(nll)
+        elif reduction == 'none':
+            return nll
+        else:
+            raise ValueError(f"Unknown reduction: {reduction}")
+
+    @staticmethod
+    def linear_transform(
+        loc: torch.Tensor, 
+        scale: torch.Tensor, 
+        weight: torch.Tensor, 
+        bias: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        高斯分布的线性变换
+        
+        如果 X ~ N(μ, σ²)，则 W·X + b ~ N(W·μ + b, W²·σ²)
+        """
+        new_loc = torch.matmul(loc, weight.T) + bias
+        # For diagonal covariance, new_scale = (W**2) * scale
+        new_scale = torch.matmul(scale, (weight**2).T)
+        return new_loc, new_scale
+
+    @staticmethod
+    def add_distributions(
+        loc1: torch.Tensor, 
+        scale1: torch.Tensor,
+        loc2: torch.Tensor, 
+        scale2: torch.Tensor
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        """
+        高斯分布的加法稳定性
+        
+        N(μ1, σ1²) + N(μ2, σ2²) = N(μ1 + μ2, σ1² + σ2²)
+        """
+        sum_loc = loc1 + loc2
+        sum_scale = scale1 + scale2
+        return sum_loc, sum_scale
+
+    @staticmethod
+    def sample(
+        loc: torch.Tensor, 
+        scale: torch.Tensor, 
+        sample_shape: Tuple[int, ...] = ()
+    ) -> torch.Tensor:
+        """从高斯分布采样"""
+        shape = sample_shape + loc.shape
+        std_dev = torch.sqrt(scale.clamp(min=1e-8))
+        return loc + std_dev * torch.randn(shape, dtype=loc.dtype, device=loc.device)

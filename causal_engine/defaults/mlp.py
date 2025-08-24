@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from ..core.interfaces import PerceptionModule, AbductionModule, ActionModule
-from ..utils.math import CauchyMath
+from ..utils.math import CauchyMath, GaussianMath
 
 # --- Helper Function from original implementation ---
 
@@ -96,7 +96,8 @@ class LinearAction(ActionModule):
         causal_size: int,
         output_size: int,
         b_noise_init: float = 0.1,
-        b_noise_trainable: bool = True
+        b_noise_trainable: bool = True,
+        distribution: str = 'cauchy'
     ):
         super().__init__()
         self.weight = nn.Parameter(torch.empty(output_size, causal_size))
@@ -107,6 +108,13 @@ class LinearAction(ActionModule):
         else:
             self.register_buffer('b_noise', torch.full((causal_size,), b_noise_init))
         
+        if distribution == 'cauchy':
+            self.math = CauchyMath
+        elif distribution == 'normal':
+            self.math = GaussianMath
+        else:
+            raise ValueError(f"Unsupported distribution for LinearAction: {distribution}")
+
         self._init_weights()
 
     def _init_weights(self):
@@ -127,15 +135,15 @@ class LinearAction(ActionModule):
             mu_U_final = mu_U
             gamma_U_final = gamma_U
         elif mode == 'standard':
-            # Use CauchyMath for adding distributions
+            # Use the selected math utility for adding distributions
             noise_loc = torch.zeros_like(mu_U)
             noise_gamma = torch.abs(self.b_noise).unsqueeze(0).expand_as(gamma_U)
-            mu_U_final, gamma_U_final = CauchyMath.add_distributions(
+            mu_U_final, gamma_U_final = self.math.add_distributions(
                 mu_U, gamma_U, noise_loc, noise_gamma
             )
         elif mode == 'sampling':
-            # Use CauchyMath for sampling
-            noise_samples = CauchyMath.sample(
+            # Use the selected math utility for sampling
+            noise_samples = self.math.sample(
                 torch.zeros_like(mu_U), torch.ones_like(mu_U)
             )
             mu_U_final = mu_U + self.b_noise.unsqueeze(0) * noise_samples
@@ -143,8 +151,8 @@ class LinearAction(ActionModule):
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
-        # Use CauchyMath for the linear transformation
-        mu_S, gamma_S = CauchyMath.linear_transform(
+        # Use the selected math utility for the linear transformation
+        mu_S, gamma_S = self.math.linear_transform(
             mu_U_final, gamma_U_final, self.weight, self.bias
         )
         
