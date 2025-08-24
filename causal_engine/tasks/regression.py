@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from .base import Head, Loss
 from ..core.interfaces import TaskModule
-from ..core.math import CausalMath
+from ..utils.math import CauchyMath
 
 # --- Head Implementations ---
 
@@ -16,14 +16,18 @@ class RegressionHead(Head):
 
 # --- Loss Implementations ---
 
+def _gaussian_nll(y_true, mu, gamma):
+    # Here, gamma is consistently treated as the variance (sigma^2)
+    sigma_sq = gamma.clamp(min=1e-8) # for stability
+    return 0.5 * torch.log(sigma_sq) + 0.5 * ((y_true - mu)**2 / sigma_sq)
+
 class NLLLoss(Loss):
-    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
+    def __init__(self, distribution: str = 'cauchy'):
         super().__init__()
-        self.reduction = reduction
         if distribution == 'cauchy':
-            self.nll_fn = CausalMath.cauchy_nll
+            self.nll_fn = lambda y, mu, gamma: CauchyMath.nll_loss(y, mu, gamma, reduction='none')
         elif distribution == 'normal':
-            self.nll_fn = CausalMath.gaussian_nll
+            self.nll_fn = _gaussian_nll
         else:
             raise ValueError(f"Unsupported distribution for NLLLoss: {distribution}")
 
@@ -32,13 +36,13 @@ class NLLLoss(Loss):
         # Reshape y_true if necessary to match broadcasting rules
         if y_true.ndim == 1:
             y_true = y_true.unsqueeze(-1)
-        return self.nll_fn(y_true, mu_S, gamma_S, reduction=self.reduction)
+        return self.nll_fn(y_true, mu_S, gamma_S).mean()
 
 class SmartRegressionLoss(Loss):
-    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
+    def __init__(self, distribution: str = 'cauchy'):
         super().__init__()
-        self.probabilistic_loss = NLLLoss(distribution, reduction=reduction)
-        self.deterministic_loss = nn.MSELoss(reduction=reduction)
+        self.probabilistic_loss = NLLLoss(distribution)
+        self.deterministic_loss = nn.MSELoss()
     
     def forward(self, y_true: torch.Tensor, decision_scores: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         mu_S, gamma_S = decision_scores
@@ -53,9 +57,9 @@ class SmartRegressionLoss(Loss):
 # --- TaskModule Implementation ---
 
 class RegressionTask(TaskModule):
-    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
+    def __init__(self, distribution: str = 'cauchy'):
         self._head = RegressionHead()
-        self._loss = SmartRegressionLoss(distribution, reduction=reduction)
+        self._loss = SmartRegressionLoss(distribution)
 
     @property
     def head(self) -> nn.Module:

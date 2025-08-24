@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from ..core.interfaces import PerceptionModule, AbductionModule, ActionModule
+from ..utils.math import CauchyMath
 
 # --- Helper Function from original implementation ---
 
@@ -126,17 +127,25 @@ class LinearAction(ActionModule):
             mu_U_final = mu_U
             gamma_U_final = gamma_U
         elif mode == 'standard':
-            mu_U_final = mu_U
-            gamma_U_final = gamma_U + torch.abs(self.b_noise).unsqueeze(0).expand_as(gamma_U)
+            # Use CauchyMath for adding distributions
+            noise_loc = torch.zeros_like(mu_U)
+            noise_gamma = torch.abs(self.b_noise).unsqueeze(0).expand_as(gamma_U)
+            mu_U_final, gamma_U_final = CauchyMath.add_distributions(
+                mu_U, gamma_U, noise_loc, noise_gamma
+            )
         elif mode == 'sampling':
-            uniform = torch.rand_like(mu_U)
-            epsilon = torch.tan(torch.pi * (uniform - 0.5))
-            mu_U_final = mu_U + self.b_noise.unsqueeze(0) * epsilon
+            # Use CauchyMath for sampling
+            noise_samples = CauchyMath.sample(
+                torch.zeros_like(mu_U), torch.ones_like(mu_U)
+            )
+            mu_U_final = mu_U + self.b_noise.unsqueeze(0) * noise_samples
             gamma_U_final = gamma_U
         else:
             raise ValueError(f"Unknown mode: {mode}")
 
-        mu_S = torch.matmul(mu_U_final, self.weight.T) + self.bias
-        gamma_S = torch.matmul(gamma_U_final, torch.abs(self.weight).T)
+        # Use CauchyMath for the linear transformation
+        mu_S, gamma_S = CauchyMath.linear_transform(
+            mu_U_final, gamma_U_final, self.weight, self.bias
+        )
         
         return mu_S, gamma_S
