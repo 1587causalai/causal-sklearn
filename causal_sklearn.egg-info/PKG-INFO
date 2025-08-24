@@ -5,13 +5,8 @@ Summary: Scikit-learn compatible implementation of CausalEngine for causal machi
 Home-page: https://github.com/1587causalai/causal-sklearn
 Author: CausalEngine Team
 Author-email: 
-Maintainer: CausalEngine Team
-License: Apache-2.0
-Project-URL: Homepage, https://github.com/1587causalai/causal-sklearn
-Project-URL: Bug Reports, https://github.com/1587causalai/causal-sklearn/issues
-Project-URL: Source, https://github.com/1587causalai/causal-sklearn
-Project-URL: Documentation, https://github.com/1587causalai/causal-sklearn/tree/main/docs
-Keywords: causal-inference,machine-learning,scikit-learn,neural-networks,regression,classification,causality
+License: UNKNOWN
+Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Intended Audience :: Developers
 Classifier: Intended Audience :: Science/Research
@@ -26,28 +21,17 @@ Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.8
 Description-Content-Type: text/markdown
-License-File: LICENSE
-Requires-Dist: numpy>=1.21.0
-Requires-Dist: scipy>=1.7.0
-Requires-Dist: scikit-learn>=1.0.0
-Requires-Dist: torch>=1.10.0
-Requires-Dist: pandas>=1.3.0
 Provides-Extra: dev
-Requires-Dist: pytest>=6.0; extra == "dev"
-Requires-Dist: pytest-cov>=2.0; extra == "dev"
-Requires-Dist: black>=21.0; extra == "dev"
-Requires-Dist: flake8>=3.8; extra == "dev"
-Requires-Dist: mypy>=0.800; extra == "dev"
 Provides-Extra: docs
-Requires-Dist: sphinx>=4.0; extra == "docs"
-Requires-Dist: sphinx-rtd-theme>=1.0; extra == "docs"
-Provides-Extra: examples
-Requires-Dist: matplotlib>=3.5.0; extra == "examples"
-Requires-Dist: seaborn>=0.11.0; extra == "examples"
+License-File: LICENSE
 
 # Causal-Sklearn - 基于CausalEngine™核心的因果回归和分类
 
 基于突破性CausalEngine™算法的scikit-learn兼容实现 - 将因果推理带入传统机器学习生态系统。
+
+- Causal Regression 是基于因果关系的回归预测，是没有treatment的因果推断。
+- 回归将从误差最小化， 而因果回归是极大思然
+
 
 ## 核心概念
 
@@ -274,3 +258,4 @@ python scripts/classification_robustness_real_datasets.py
 *从相关性到因果性，从模式匹配到因果理解*
 
 </div>
+
