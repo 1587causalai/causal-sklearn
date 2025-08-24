@@ -3,8 +3,8 @@ requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "causal-sklearn"
-description = "Scikit-learn compatible implementation of CausalEngine for causal machine learning"
+name = "causal-engine"
+description = "A decoupled, modular, and extensible causal inference engine in PyTorch"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "Apache-2.0"}
@@ -70,10 +70,10 @@ examples = [
 "Documentation" = "https://github.com/1587causalai/causal-sklearn/tree/main/docs"
 
 [tool.setuptools]
-packages = ["causal_sklearn", "causal_sklearn._causal_engine"]
+packages = ["causal_engine"]
 
 [tool.setuptools.dynamic]
-version = {attr = "causal_sklearn._version.__version__"}
+version = {attr = "causal_engine._version.__version__"}
 
 [tool.black]
 line-length = 88

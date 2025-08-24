@@ -3,9 +3,9 @@ import torch.nn as nn
 from torch.utils.data import TensorDataset, DataLoader
 
 # 1. 导入所有新架构的模块
-from causal_sklearn.core.engine import CausalEngine
-from causal_sklearn.defaults.mlp import MLPPerception, MLPAbduction, LinearAction
-from causal_sklearn.tasks.regression import RegressionTask
+from causal_engine.core.engine import CausalEngine
+from causal_engine.defaults.mlp import MLPPerception, MLPAbduction, LinearAction
+from causal_engine.tasks.regression import RegressionTask
 
 # --- 设置模型参数 ---
 INPUT_SIZE = 10
