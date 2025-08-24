@@ -4,48 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**causal-sklearn** is a scikit-learn compatible Python library implementing causal machine learning algorithms based on the CausalEngine™ framework. The core innovation is learning structural equations `Y = f(U, ε)` instead of conditional expectations `E[Y|X]`, where `U` represents unobservable individual causal representations.
+**causal-engine** (formerly causal-sklearn) is a PyTorch-based library implementing causal machine learning algorithms based on the CausalEngine™ framework. It models underlying causal mechanisms **Y = f(U, ε)** instead of traditional correlation-based approaches **E[Y|X]**.
+
+The library is currently undergoing a major refactoring on the `decoupled-engine` branch to provide a modular, extensible, and mathematically pure architecture.
 
 ## Development Commands
 
-### Quick Testing and Validation
+### Quick Testing
 ```bash
-# Primary validation test - runs both regression and classification
-python scripts/quick_test_causal_engine.py
+# Run regression example
+python examples/tutorial_regression.py
 
-# Extended testing with more methods
-python scripts/quick_test_causal_engine_extended.py
-
-# Specific functionality tests
-python scripts/test_causal_split.py
-
-# Binary classification robustness testing
-python scripts/binary_classification_robustness_real_datasets.py
-
-# Generate flowchart explaining the scripts
-python scripts/scripts_comparison_flowchart_english.py
-```
-
-### Robustness Testing (Key Feature)
-```bash
-# Test regression robustness across noise levels (0%-100%)
-python scripts/regression_robustness_real_datasets.py
-
-# Test classification robustness across noise levels
-python scripts/classification_robustness_real_datasets.py
-
-# Compare PyTorch vs sklearn MLP baselines
-python scripts/pytorch_vs_sklearn_mlp_comparison.py
-```
-
-### Comprehensive Examples
-```bash
-# Main tutorial showcasing all CausalEngine modes
-python examples/comprehensive_causal_modes_tutorial_sklearn_style.py
-
-# Real-world data examples (California housing, etc.)
-python examples/real_world_regression_tutorial_sklearn_style.py
-python examples/real_world_regression_tutorial_extended_sklearn_style.py
+# Run classification example  
+python examples/tutorial_classification.py
 ```
 
 ### Package Development
@@ -59,30 +30,22 @@ pip install -e ".[dev]"
 # Install with examples dependencies for plotting
 pip install -e ".[examples]"
 
-# Build using modern Python build tools
+# Build package
 python -m build --no-isolation
 
 # Check package integrity
 twine check dist/*
 
-# Publishing options
-python publish.py               # Interactive mode (asks for target)
-python publish.py --build-only  # Build only, no upload
+# Publishing
+python publish.py               # Interactive mode
+python publish.py --build-only  # Build only
 python publish.py --test        # Upload to TestPyPI
-python publish.py --release     # Upload to PyPI (requires double confirmation)
-
-# Test local installation
-python -m venv test_env
-source test_env/bin/activate  # Linux/Mac
-test_env\Scripts\activate     # Windows
-pip install dist/*.whl
-python -c 'import causal_sklearn; print(causal_sklearn.__version__)'
-deactivate
+python publish.py --release     # Upload to PyPI
 ```
 
 ### Code Quality
 ```bash
-# Code formatting (88 char line length)
+# Format code (88 char line length)
 black . --line-length=88 --target-version=py38
 
 # Linting
@@ -91,176 +54,117 @@ flake8 .
 # Type checking
 mypy . --python-version=3.8 --warn-return-any --warn-unused-configs
 
-# Testing with pytest
+# Testing
 pytest tests/
-pytest --cov=causal_sklearn tests/  # with coverage
-
-# Run specific test
-pytest tests/test_specific_functionality.py::test_function_name
+pytest --cov=causal_engine tests/
 ```
 
-### Paper and Documentation
-```bash
-# Compile LaTeX paper
-cd paper/AuthorKit26/AnonymousSubmission/LaTeX/
-./compile.sh
+## New Decoupled Architecture
+
+### Core Philosophy
+- **Composition over Inheritance**: CausalEngine is an orchestrator composing independent modules
+- **Task as a Module**: Task-specific logic encapsulated in swappable TaskModule
+- **Contract-Driven Design**: All components adhere to strict ABC interfaces
+- **Distribution-Aware**: Consistent handling of probability distributions (Cauchy, Gaussian)
+
+### Four Injectable Modules
+
+```
+1. PerceptionModule: X → Z (Feature Extraction)
+2. AbductionModule: Z → U (Causal Representation Distribution)  
+3. ActionModule: U → S (Decision Score Distribution)
+4. TaskModule: Encapsulates Head (prediction) and Loss (training)
 ```
 
-## Architecture Overview
+### Five Inference Modes
 
-### Core CausalEngine™ Four-Stage Architecture
+- **`deterministic`**: U' = μ_U (traditional ML baseline)
+- **`exogenous`**: U' ~ Cauchy(μ_U, |b_noise|) (environmental randomness)
+- **`endogenous`**: U' ~ Cauchy(μ_U, γ_U) (cognitive uncertainty)
+- **`standard`**: U' ~ Cauchy(μ_U, γ_U + |b_noise|) (combined, typically best)
+- **`sampling`**: U' ~ Cauchy(μ_U + b_noise*ε, γ_U) (location perturbation)
 
+## Core Implementation Structure
+
+### New Engine (`causal_engine/`)
+- **`core/engine.py`**: Main CausalEngine orchestrator
+- **`core/interfaces.py`**: Abstract base classes for all modules
+- **`defaults/mlp.py`**: Default MLP implementations (MLPPerception, MLPAbduction, LinearAction)
+- **`tasks/regression.py`**: RegressionTask module
+- **`tasks/classification.py`**: ClassificationTask module
+- **`utils/math.py`**: Mathematical utilities for distributions
+
+### Module Interfaces
+
+```python
+# PerceptionModule
+forward(x) -> z
+
+# AbductionModule  
+forward(z) -> (μ_U, γ_U)
+
+# ActionModule
+forward(mu_U, gamma_U, mode='standard') -> (μ_S, γ_S)
+
+# TaskModule
+@property head -> nn.Module  # Head.forward(decision_scores) -> y_pred
+@property loss -> nn.Module  # Loss.forward(y_true, decision_scores) -> loss
 ```
-Input (X) → Perception → Representation (Z) → Abduction → 
-Causal Representation (U) → Action → Decision Scores (S) → Decision Head → Output (Y)
+
+## Usage Pattern
+
+```python
+# 1. Initialize modules independently
+perception = MLPPerception(input_size=10, repre_size=20)
+abduction = MLPAbduction(repre_size=20, causal_size=5)
+action = LinearAction(causal_size=5, output_size=1, distribution="cauchy")
+task = RegressionTask(distribution="cauchy")
+
+# 2. Assemble engine via dependency injection
+engine = CausalEngine(
+    perception=perception,
+    abduction=abduction,
+    action=action,
+    task=task
+)
+
+# 3. Standard PyTorch training
+optimizer = torch.optim.Adam(engine.parameters(), lr=1e-3)
+loss_fn = engine.task.loss
+
+# Forward pass
+mu_S, gamma_S = engine(X_batch)
+loss = loss_fn(y_batch, (mu_S, gamma_S))
 ```
 
-**Stage Breakdown:**
-1. **Perception**: Feature extraction using configurable MLP layers (`X → Z`)
-2. **Abduction**: Infer individual causal representations as Cauchy distributions (`Z → U ~ Cauchy(μ_U, γ_U)`)
-3. **Action**: Transform causal representations to decision scores with learnable noise (`U → S`)
-4. **Decision**: Task-specific heads for regression/classification output (`S → Y`)
+## Key Development Notes
 
-### Five Inference Modes (Critical for Performance)
+### Mathematical Foundation
+- **Cauchy Distribution**: Central due to linear stability property
+- **Linear Stability**: aX + b ~ Cauchy(aμ + b, |a|γ) if X ~ Cauchy(μ, γ)
+- **Individual Selection Variable U**: Dual identity as selector and causal representation
 
-- **`deterministic`**: `U' = μ_U` (equivalent to traditional ML, baseline)
-- **`exogenous`**: `U' ~ Cauchy(μ_U, |b_noise|)` (environmental randomness dominates)
-- **`endogenous`**: `U' ~ Cauchy(μ_U, γ_U)` (cognitive uncertainty dominates)  
-- **`standard`**: `U' ~ Cauchy(μ_U, γ_U + |b_noise|)` (both sources combined, **typically best performance**)
-- **`sampling`**: `U' ~ Cauchy(μ_U + b_noise*ε, γ_U)` (location parameter perturbation)
+### Distribution Handling
+- ActionModule manages distribution type (cauchy/gaussian)
+- TaskModule's loss function auto-selects strategy based on γ_S
+- Deterministic mode returns (μ_S, zeros) for interface consistency
 
-### Key Mathematical Foundation
-
-- **Cauchy Distribution**: Central to the framework due to linear stability property enabling analytical computation
-- **Individual Selection Variable U**: Dual identity as both individual selector and causal representation
-- **Uncertainty Decomposition**: Separates epistemic (cognitive) and aleatoric (environmental) uncertainty
-
-## Main API Components
-
-### Primary Models (`causal_sklearn/`)
-- **`MLPCausalRegressor`**: Main causal regression model with 5 inference modes
-- **`MLPCausalClassifier`**: Causal classification using One-vs-Rest approach
-- **Robust baselines**: `MLPHuberRegressor`, `MLPPinballRegressor`, `MLPCauchyRegressor`
-- **PyTorch baselines**: `MLPPytorchRegressor`, `MLPPytorchClassifier`
-
-### Core Engine (`causal_sklearn/_causal_engine/`)
-- **`engine.py`**: Main CausalEngine implementation with four-stage architecture
-- **`networks.py`**: Perception, Abduction, Action network modules
-- **`heads.py`**: Regression and Classification decision heads
-- **`math_utils.py`**: Cauchy distribution mathematical operations
-
-## Key Performance Characteristics
-
-**Exceptional robustness in noisy environments** - This is the library's main strength:
-- 30% label noise regression: sklearn MLP (MAE: 47.60) vs CausalEngine standard (MAE: 11.41)
-- 30% label noise classification: sklearn MLP (Acc: 0.8850) vs CausalEngine standard (Acc: 0.9225)
-
-## Critical Development Notes
-
-### Testing Strategy
-- **Always run** `python scripts/quick_test_causal_engine.py` after changes - this is the primary validation
-- The `standard` mode typically shows the best performance in noisy conditions
-- The `deterministic` mode serves as a causal baseline roughly equivalent to traditional ML
-- Real tests are in `scripts/` directory, not `tests/` (which is minimal)
-
-### Data Handling
-- All models auto-standardize features and encode labels
-- Support for sample weights and early stopping with validation
-- Scikit-learn API compatibility (`fit`, `predict`, `score`, `predict_proba`)
-- Support for sklearn built-in datasets and OpenML dataset fetching
-
-### Mathematical Stability
-- Cauchy distribution enables analytical computation without sampling
-- Linear stability property: `aX + b ~ Cauchy(aμ + b, |a|γ)` if `X ~ Cauchy(μ, γ)`
-
-### Three-Step Tuning Approach (from TODO.md)
-1. **Baseline**: Get traditional MLP working well
-2. **PyTorch MLP**: Ensure neural network basics are correct
+### Three-Step Tuning Approach
+1. **Baseline**: Traditional algorithms (logistic regression, XGBoost)
+2. **PyTorch MLP**: Validate neural network basics
 3. **CausalEngine**: Apply causal framework (may need different learning rates)
 
 ## Important Documentation
 
-- **`docs/mathematical_foundation.md`**: Complete theoretical framework
-- **`docs/ONE_PAGER.md`**: Executive summary
-- **`docs/U_deep_dive.md`**: Deep dive into individual selection variable U
-- **`docs/blog_post_causal_sklearn.md`**: Comprehensive introduction blog post
-- **`docs/cognitive_reconstruction.md`**: Cognitive reconstruction theory
-- **`docs/core_mathematical_framework.md`**: Extended mathematical frameworks
-- **`docs/decision_framework.md`**: Decision making framework
-
-## Results and Outputs
-
-- Test results saved in `results/` directory with subdirectories for different test types:
-  - `results/regression_real_datasets/`: Regression robustness results
-  - `results/binary_classification_robustness/`: Classification robustness results
-  - `results/quick_test_results/`: Quick validation results
-- Performance plots (`.png`) and numerical results (`.npy`, `.txt`) automatically generated
-- Robustness curves show performance across noise levels (0%-100%)
-
-## Development Philosophy
-
-The library focuses on **causal understanding rather than just pattern matching**. The core insight is that individual differences are not "statistical noise" to be suppressed, but "causal information" to be understood through the individual selection variable U and universal causal laws f.
-
-## Project Language and Localization
-
-- Primary documentation and comments are in **Chinese** (中文)
-- Mathematical notation follows international standards
-- API and code interfaces follow English conventions for scikit-learn compatibility
-- README.md and key documentation use Chinese to serve the primary user base
-
-## Key Files to Understand
-
-### Core Implementation
-- `causal_sklearn/_causal_engine/engine.py`: The heart of CausalEngine implementation
-- `causal_sklearn/regressor.py`: User-facing regression models
-- `causal_sklearn/classifier.py`: User-facing classification models
-
-### Quick Understanding Scripts
-- `scripts/quick_test_causal_engine.py`: Best starting point to understand performance
-- `examples/comprehensive_causal_modes_tutorial_sklearn_style.py`: Demonstrates all modes
-
-## Common Development Tasks
-
-### Adding a New Model
-1. Inherit from appropriate base class in `causal_sklearn/`
-2. Follow existing model patterns (see `MLPCausalRegressor` for reference)
-3. Ensure scikit-learn API compatibility
-4. Add to `__init__.py` exports
-5. Test with `quick_test_causal_engine.py`
-
-### Modifying CausalEngine
-1. Core logic is in `_causal_engine/engine.py`
-2. Network components in `_causal_engine/networks.py`
-3. Mathematical operations in `_causal_engine/math_utils.py`
-4. Always test changes with noise robustness scripts
-
-### Publishing Updates
-```bash
-# Clean old builds first
-rm -rf build dist *.egg-info
-
-# Use the automated publishing script
-python publish.py
-
-# Or manually:
-python -m build --no-isolation
-twine check dist/*
-twine upload dist/*
-```
-
-## Installation Verification
-
-After installation, verify with:
-```python
-import causal_sklearn
-print(f"Causal-sklearn version: {causal_sklearn.__version__}")
-print("安装成功！🎉")
-```
+- **`docs/decoupled_causal_engine_spec.md`**: Architecture specification
+- **`docs/mathematical_foundation.md`**: Theoretical framework
+- **`docs/U_deep_dive.md`**: Individual selection variable theory
+- **`docs/tuning_guide.md`**: Performance tuning guidance
 
 ## Project Metadata
 
-- **Python Version**: 3.8-3.11 supported
-- **Development Status**: Alpha
+- **Python Version**: 3.8-3.11
+- **Main Dependencies**: PyTorch, NumPy, SciPy, scikit-learn
 - **License**: Apache-2.0
-- **Homepage**: https://github.com/1587causalai/causal-sklearn
-- **Bug Reports**: https://github.com/1587causalai/causal-sklearn/issues
+- **Current Branch**: decoupled-engine
+- **Status**: Alpha (major refactoring in progress)
