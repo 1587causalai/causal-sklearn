@@ -5,7 +5,7 @@ import torch.nn.functional as F
 
 from .base import Head, Loss
 from ..core.interfaces import TaskModule
-from ..core import math as CausalMath
+from ..core.math import CausalMath
 
 # --- Head Implementations ---
 
@@ -17,8 +17,9 @@ class RegressionHead(Head):
 # --- Loss Implementations ---
 
 class NLLLoss(Loss):
-    def __init__(self, distribution: str = 'cauchy'):
+    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
         super().__init__()
+        self.reduction = reduction
         if distribution == 'cauchy':
             self.nll_fn = CausalMath.cauchy_nll
         elif distribution == 'normal':
@@ -31,13 +32,13 @@ class NLLLoss(Loss):
         # Reshape y_true if necessary to match broadcasting rules
         if y_true.ndim == 1:
             y_true = y_true.unsqueeze(-1)
-        return self.nll_fn(y_true, mu_S, gamma_S).mean()
+        return self.nll_fn(y_true, mu_S, gamma_S, reduction=self.reduction)
 
 class SmartRegressionLoss(Loss):
-    def __init__(self, distribution: str = 'cauchy'):
+    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
         super().__init__()
-        self.probabilistic_loss = NLLLoss(distribution)
-        self.deterministic_loss = nn.MSELoss()
+        self.probabilistic_loss = NLLLoss(distribution, reduction=reduction)
+        self.deterministic_loss = nn.MSELoss(reduction=reduction)
     
     def forward(self, y_true: torch.Tensor, decision_scores: Tuple[torch.Tensor, torch.Tensor]) -> torch.Tensor:
         mu_S, gamma_S = decision_scores
@@ -52,9 +53,9 @@ class SmartRegressionLoss(Loss):
 # --- TaskModule Implementation ---
 
 class RegressionTask(TaskModule):
-    def __init__(self, distribution: str = 'cauchy'):
+    def __init__(self, distribution: str = 'cauchy', reduction: str = 'mean'):
         self._head = RegressionHead()
-        self._loss = SmartRegressionLoss(distribution)
+        self._loss = SmartRegressionLoss(distribution, reduction=reduction)
 
     @property
     def head(self) -> nn.Module:
