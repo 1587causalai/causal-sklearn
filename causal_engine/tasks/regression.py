@@ -5,6 +5,7 @@ import torch.nn.functional as F
 
 from .base import Head, Loss
 from ..core.interfaces import TaskModule
+from ..core import math as CausalMath
 
 # --- Head Implementations ---
 
@@ -15,22 +16,13 @@ class RegressionHead(Head):
 
 # --- Loss Implementations ---
 
-def _cauchy_nll(y_true, mu, gamma):
-    gamma = gamma.clamp(min=1e-8) # for stability
-    return torch.log(torch.pi * gamma) + torch.log(1 + ((y_true - mu) / gamma)**2)
-
-def _gaussian_nll(y_true, mu, gamma):
-    # Here, gamma is consistently treated as the variance (sigma^2)
-    sigma_sq = gamma.clamp(min=1e-8) # for stability
-    return 0.5 * torch.log(sigma_sq) + 0.5 * ((y_true - mu)**2 / sigma_sq)
-
 class NLLLoss(Loss):
     def __init__(self, distribution: str = 'cauchy'):
         super().__init__()
         if distribution == 'cauchy':
-            self.nll_fn = _cauchy_nll
+            self.nll_fn = CausalMath.cauchy_nll
         elif distribution == 'normal':
-            self.nll_fn = _gaussian_nll
+            self.nll_fn = CausalMath.gaussian_nll
         else:
             raise ValueError(f"Unsupported distribution for NLLLoss: {distribution}")
 
