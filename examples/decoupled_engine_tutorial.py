@@ -27,10 +27,14 @@ def main():
     abduction_net = MLPAbduction(
         repre_size=REPRE_SIZE, causal_size=CAUSAL_SIZE, hidden_layers=(32,)
     )
-    action_net = LinearAction(causal_size=CAUSAL_SIZE, output_size=OUTPUT_SIZE)
-    
-    # 关键：通过配置创建任务
-    regression_task = RegressionTask(distribution="cauchy")
+    # 关键：在这里选择分布
+    DISTRIBUTION = "cauchy"
+    action_net = LinearAction(
+        causal_size=CAUSAL_SIZE, output_size=OUTPUT_SIZE, distribution=DISTRIBUTION
+    )
+
+    # 关键：任务现在也需要知道分布类型
+    regression_task = RegressionTask(distribution=DISTRIBUTION)
 
     # 3. 组装引擎
     print("Step 3: Assembling the CausalEngine...")
@@ -61,19 +65,19 @@ def main():
         total_loss = 0
         for x_batch, y_batch in train_loader:
             optimizer.zero_grad()
-            
+
             # 引擎输出S分布 (使用默认 'standard' 模式)
             mu_S, gamma_S = engine(x_batch)
-            
+
             # loss_fn 内部会自动处理模式
             loss = loss_fn(y_batch, (mu_S, gamma_S))
-            
+
             loss.backward()
             optimizer.step()
             total_loss += loss.item()
-        
+
         print(f"Epoch {epoch+1}/{EPOCHS}, Average Loss: {total_loss / len(train_loader):.4f}")
-    
+
     print("Training finished.")
 
     # 6. 使用 predict 方法进行推理
