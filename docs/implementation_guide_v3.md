@@ -209,10 +209,10 @@ git commit -m "feat(defaults): Implement default components and regression task"
 
 ## 阶段 4: 集成验证与示例 (约 1 小时)
 
-### 1. 创建 `examples/decoupled_engine_tutorial.py`
+### 1. 创建 `examples/regression_tutorial.py`
 编写一个端到端的训练示例来验证整个架构。
 ```python
-# examples/decoupled_engine_tutorial.py
+# examples/regression_tutorial.py
 # 1. 导入所有模块:
 from causal_sklearn.core.engine import CausalEngine
 from causal_sklearn.defaults.mlp import MLPPerception, MLPAbduction, LinearAction
@@ -226,7 +226,7 @@ from causal_sklearn.tasks.regression import RegressionTask
 
 ### 2. 提交
 ```bash
-git add examples/decoupled_engine_tutorial.py
+git add examples/regression_tutorial.py
 git commit -m "docs(examples): Add end-to-end tutorial for decoupled engine"
 ```
 
